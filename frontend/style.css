@@ -43,7 +43,7 @@ body {
   width: 100%;
   background: darkgray;
   position: absolute;
-  z-index: 999;
+  z-index: 3;
   display: none;
 }
 
@@ -83,11 +83,24 @@ h1 {
 }
 
 h2 {
+  display: flex;
+  justify-content: space-between;
   margin: 30px auto 10px 50px;
   padding: 0 0 0 20px;
   border-radius: 10px;
   font-size: 2rem;
   background: rgba(169, 169, 169, 0.856);
+}
+
+.save {
+  background: rgba(169, 169, 169, 0.856);
+  width: 200px;
+  font-size: 1.5rem;
+  border-radius: 10px;
+}
+
+.save:hover {
+  background: rgb(88, 85, 85);
 }
 
 .calendar {
@@ -113,11 +126,99 @@ h2 {
 
 .grid {
   display: grid;
-
+  max-width: 1000px;
   font-size: 1.5rem;
   gap: 5px;
 
   margin: 10px 50px 50px 50px;
   grid-template-columns: 70px repeat(7, 120px);
   grid-template-rows: 35px repeat(6, 60px);
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 5;
+  width: 740px;
+  height: 760px;
+  padding: 10px;
+  top: 10%;
+  right: 5%;
+  border-radius: 20px;
+  border: solid 3px black;
+  box-shadow: black 0px 0px 14px 7px;
+  font-size: 1.5rem;
+  background-color: rgba(169, 169, 169, 1);
+}
+h3 {
+  background-color: rgb(88, 85, 85);
+  text-align: center;
+  height: 30px;
+  font-size: 2rem;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+span {
+  font-size: 1rem;
+}
+
+.infoLocataires {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.nom,
+.prenom {
+  width: 240px;
+}
+.nom *,
+.prenom * {
+  width: 220px;
+  height: 30px;
+  margin: 5px;
+}
+
+.age {
+  width: 70px;
+}
+
+.age * {
+  width: 50px;
+  height: 30px;
+  margin: 5px;
+}
+
+.dateNaissance {
+  width: 130px;
+}
+
+.dateNaissance * {
+  width: 100px;
+  height: 30px;
+  margin: 5px;
+}
+
+.nbrPersonnes {
+  width: 120px;
+  height: 30px;
+  margin-bottom: 20px;
+}
+
+.nbrPersonnes * {
+  width: 50px;
+  height: 30px;
+  margin-bottom: 20px;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
 }
