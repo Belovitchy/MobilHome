@@ -6,8 +6,8 @@
     <title>MobilHome Contis</title>
     <link rel="shortcut icon" href="assets/icones/maison-mobile.png" />
     <link rel="stylesheet" href="./style.css" />
-    <script src="./index.js" defer></script>
-    <script src="./locataires.js" defer></script>
+    <script type="module" src="./index.js" defer></script>
+    <script type="module" src="./locataires.js" defer></script>
   </head>
   <body>
     <nav class="navbar">
@@ -109,17 +109,21 @@
         </div>
       </section>
       <section class="contact">
-        <label for="tel">Téléphone</label
-        ><input type="tel" name="tel" id="tel" class="dataLoc" />
-        <label for="email">Email</label
-        ><input type="email" name="email" id="email" class="dataLoc" />
-        <label for="immat">Immatriculation</label
-        ><input type="text" name="immat" id="immat" class="dataLoc" />
-        <label for="siblu">Ref. Siblu</label
-        ><input type="text" name="siblu" id="siblu" class="dataLoc" />
-        <button id="enr">Enregistrer</button>
-        <button id="supp">Supprimer</button>
-        <button id="quit">Quitter</button>
+        <div class="telmail">
+          <label for="tel">Téléphone</label
+          ><input type="tel" name="tel" id="tel" class="dataLoc" />
+          <label for="email">Email</label
+          ><input type="email" name="email" id="email" class="dataLoc" />
+          <label for="immat">Immat</label
+          ><input type="text" name="immat" id="immat" class="dataLoc" />
+          <label for="siblu">Ref. Siblu</label
+          ><input type="text" name="siblu" id="siblu" class="dataLoc" />
+        </div>
+        <div class="buttonsPop">
+          <button id="enr">Enregistrer</button>
+          <button id="supp">Supprimer</button>
+          <button id="quit">Quitter</button>
+        </div>
       </section>
     </div>
     <h1>Mobil Home Dunes De Contis</h1>

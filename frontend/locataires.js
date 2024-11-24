@@ -45,14 +45,14 @@ for (let i = 0; i < allBouton.length; i++) {
         mois = novembre;
         break;
     }
-    popup(mois, year);
+    popupCreer(mois, year);
   });
 }
 
 //prevoir de l'appeler au chargement d'annee
 creerCardLocataire();
 
-function popup(mois, year) {
+function popupCreer(mois, year) {
   const popup = document.querySelector(".popup");
   popup.style.display = "block";
   //vider les inputs
@@ -69,8 +69,16 @@ function popup(mois, year) {
   });
 
   boutonQuitter.addEventListener("click", () => {
+    creerCardLocataire();
     const popup = document.querySelector(".popup");
     popup.style.display = "none";
+  });
+
+  boutonSupp.addEventListener("click", () => {
+    const allInput = document.querySelectorAll(".dataLoc");
+    for (let i = 0; i < allInput.length; i++) {
+      allInput[i].value = "";
+    }
   });
 }
 
@@ -132,18 +140,6 @@ async function recupListClients() {
   try {
     const response = await fetch("http://localhost:3000/locataires");
     const data = await response.json();
-    console.log("Success:", data);
-    return data; // Retourne les données JSON
-  } catch (error) {
-    console.error("Error:", error);
-    return null; // Retourne null en cas d'erreur
-  }
-}
-
-async function recupListClients() {
-  try {
-    const response = await fetch("http://localhost:3000/locataires");
-    const data = await response.json();
     console.log("Success:", data); // Vérifie la structure des données ici
     return data; // Retourne les données JSON
   } catch (error) {
@@ -152,7 +148,7 @@ async function recupListClients() {
   }
 }
 
-async function creerCardLocataire() {
+export async function creerCardLocataire() {
   const clientsData = await recupListClients();
 
   if (!clientsData) {
@@ -170,8 +166,212 @@ async function creerCardLocataire() {
 
   if (filteredClients.length > 0) {
     console.log("Clients pour l'année", year, ":", filteredClients);
-    // Ajoute ici le code pour créer les cartes des locataires
+    const clienstTries = trierAnneeParMois(filteredClients);
+    creerDivLocataire(clienstTries.anneeMars, "cardsMars");
+    creerDivLocataire(clienstTries.anneeAvril, "cardsAvril");
+    creerDivLocataire(clienstTries.anneeMai, "cardsMai");
+    creerDivLocataire(clienstTries.anneeJuin, "cardsJuin");
+    creerDivLocataire(clienstTries.anneeJuillet, "cardsJuillet");
+    creerDivLocataire(clienstTries.anneeAout, "cardsAout");
+    creerDivLocataire(clienstTries.anneeSeptembre, "cardsSeptembre");
+    creerDivLocataire(clienstTries.anneeOctobre, "cardsOctobre");
+    creerDivLocataire(clienstTries.anneeNovembre, "cardsNovembre");
+
+    //le pb est la
+    // Ajoute ici le code pour créer les cartes des locataires ou fonction
   } else {
+    creerDivLocataire([], "cardsMars");
+    creerDivLocataire([], "cardsAvril");
+    creerDivLocataire([], "cardsMai");
+    creerDivLocataire([], "cardsJuin");
+    creerDivLocataire([], "cardsJuillet");
+    creerDivLocataire([], "cardsAout");
+    creerDivLocataire([], "cardsSeptembre");
+    creerDivLocataire([], "cardsOctobre");
+    creerDivLocataire([], "cardsNovembre");
     console.log("Aucun client trouvé pour l'année", year);
+  }
+}
+
+//creer une div par client a cette etape l'annee est deja triée
+//si mois est mars,avril...alors parent est .cardsMars,...
+//pour chaque element de mois creer une div enfant
+function creerDivLocataire(mois, idDiv) {
+  //nettoyer les div avant de les remplir
+  const parentMars = document.getElementById(idDiv);
+  //supprimer tout les enfants
+  parentMars.innerHTML = "";
+
+  console.log(mois);
+  if (mois.length > 0) {
+    for (let i = 0; i < mois.length; i++) {
+      const LocMois = mois[i];
+      const locElement = document.createElement("div");
+      locElement.id =
+        mois[i].nom1.toUpperCase() + "-" + mois[i].prenom1.toUpperCase();
+      locElement.classList.add("locataire");
+      locElement.addEventListener("click", function (event) {
+        //recuperer l'id du locataire cliqueé
+        const idLoc = event.currentTarget.id;
+        console.log(idLoc + "id locataire");
+        //afficher la popup avec infos locataire
+        popupInfo(idLoc);
+      });
+      const nomLoc = document.createElement("h4");
+      nomLoc.innerText =
+        LocMois.nom1 + " du " + LocMois.arrive + " au " + LocMois.depart;
+      locElement.appendChild(nomLoc);
+      parentMars.appendChild(locElement);
+    }
+  } else {
+    console.log("pas de locataire");
+  }
+}
+
+function trierAnneeParMois(listClientAnnee) {
+  const anneeMars = listClientAnnee.filter((client) => client.mois == "mars");
+  const anneeAvril = listClientAnnee.filter((client) => client.mois == "avril");
+  const anneeMai = listClientAnnee.filter((client) => client.mois == "mai");
+  const anneeJuin = listClientAnnee.filter((client) => client.mois == "juin");
+  const anneeJuillet = listClientAnnee.filter(
+    (client) => client.mois == "juillet"
+  );
+  const anneeAout = listClientAnnee.filter((client) => client.mois == "aout");
+  const anneeSeptembre = listClientAnnee.filter(
+    (client) => client.mois == "septembre"
+  );
+  const anneeOctobre = listClientAnnee.filter(
+    (client) => client.mois == "octobre"
+  );
+  const anneeNovembre = listClientAnnee.filter(
+    (client) => client.mois == "novembre"
+  );
+  return {
+    anneeMars,
+    anneeAvril,
+    anneeMai,
+    anneeJuin,
+    anneeJuillet,
+    anneeAout,
+    anneeSeptembre,
+    anneeOctobre,
+    anneeNovembre,
+  };
+}
+
+async function popupInfo(idLocataire) {
+  const popup = document.querySelector(".popup");
+  popup.style.display = "block";
+  //vider les inputs
+  const allInput = document.querySelectorAll(".dataLoc");
+  for (let i = 0; i < allInput.length; i++) {
+    allInput[i].value = "";
+  }
+
+  //remplir les inputs
+  const clientsData = await recupListClients();
+  const client = clientsData[idLocataire];
+  const zoneArrive = document.getElementById("arrive");
+  zoneArrive.value = client.arrive;
+  const zoneDepart = document.getElementById("depart");
+  zoneDepart.value = client.depart;
+  const zoneNom1 = document.getElementById("nom1");
+  zoneNom1.value = client.nom1;
+  const zonePrenom1 = document.getElementById("prenom1");
+  zonePrenom1.value = client.prenom1;
+  const zoneNom2 = document.getElementById("nom2");
+  zoneNom2.value = client.nom2;
+  const zonePrenom2 = document.getElementById("prenom2");
+  zonePrenom2.value = client.prenom2;
+  const zoneNom3 = document.getElementById("nom3");
+  zoneNom3.value = client.nom3;
+  const zonePrenom3 = document.getElementById("prenom3");
+  zonePrenom3.value = client.prenom3;
+  const zoneNom4 = document.getElementById("nom4");
+  zoneNom4.value = client.nom4;
+  const zonePrenom4 = document.getElementById("prenom4");
+  zonePrenom4.value = client.prenom4;
+  const zoneNom5 = document.getElementById("nom5");
+  zoneNom5.value = client.nom5;
+  const zonePrenom5 = document.getElementById("prenom5");
+  zonePrenom5.value = client.prenom5;
+  const zoneNom6 = document.getElementById("nom6");
+  zoneNom6.value = client.nom6;
+  const zonePrenom6 = document.getElementById("prenom6");
+  zonePrenom6.value = client.prenom6;
+  const zoneNom7 = document.getElementById("nom7");
+  zoneNom7.value = client.nom7;
+  const zonePrenom7 = document.getElementById("prenom7");
+  zonePrenom7.value = client.prenom7;
+  const zoneNom8 = document.getElementById("nom8");
+  zoneNom8.value = client.nom8;
+  const zonePrenom8 = document.getElementById("prenom8");
+  zonePrenom8.value = client.prenom8;
+  const zoneTel = document.getElementById("tel");
+  zoneTel.value = client.telephone;
+  const zoneEmail = document.getElementById("email");
+  zoneEmail.value = client.email;
+  const zoneImmat = document.getElementById("immat");
+  zoneImmat.value = client.immatriculation;
+  const zoneSiblu = document.getElementById("siblu");
+  zoneSiblu.value = client.siblu;
+
+  const zoneAge1 = document.getElementById("age1");
+  zoneAge1.value = client.age1;
+  const zoneAge2 = document.getElementById("age2");
+  zoneAge2.value = client.age2;
+  const zoneAge3 = document.getElementById("age3");
+  zoneAge3.value = client.age3;
+  const zoneAge4 = document.getElementById("age4");
+  zoneAge4.value = client.age4;
+  const zoneAge5 = document.getElementById("age5");
+  zoneAge5.value = client.age5;
+  const zoneAge6 = document.getElementById("age6");
+  zoneAge6.value = client.age6;
+  const zoneAge7 = document.getElementById("age7");
+  zoneAge7.value = client.age7;
+  const zoneAge8 = document.getElementById("age8");
+  zoneAge8.value = client.age8;
+
+  const boutonQuitter = document.getElementById("quit");
+  const boutonSupp = document.getElementById("supp");
+  const boutonSave = document.getElementById("enr");
+  const mois = client.mois;
+  const year = client.annee;
+  boutonSave.addEventListener("click", () => {
+    enregistreLocataireMois(mois, year);
+  });
+
+  boutonQuitter.addEventListener("click", () => {
+    creerCardLocataire();
+    const popup = document.querySelector(".popup");
+    popup.style.display = "none";
+  });
+
+  boutonSupp.addEventListener("click", () => {
+    //supprimer le locataire dans le fichier json
+    supprimeLocataire(idLocataire);
+  });
+}
+
+async function supprimeLocataire(idLocataire) {
+  //supprimer le locataire dans le fichier json
+  try {
+    const response = await fetch(
+      `http://localhost:3000/locataires/${idLocataire}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (response.ok) {
+      console.log("Client supprimé:", idLocataire);
+      // Actualiser l'interface utilisateur après la suppression
+      creerCardLocataire();
+    } else {
+      console.error("Erreur lors de la suppression du client:", idLocataire);
+    }
+  } catch (error) {
+    console.error("Erreur lors de la suppression du client:", error);
   }
 }

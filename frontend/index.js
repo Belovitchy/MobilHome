@@ -1,5 +1,5 @@
 //const { response } = require("../backend/app");
-
+import { creerCardLocataire } from "./locataires.js";
 const month = [
   "Janvier",
   "Fevrier",
@@ -117,7 +117,7 @@ function recupJoursReserve(annee) {
     });
 }
 
-const boutonSave = document.querySelector(".save");
+const boutonSave = document.querySelectorAll(".save");
 //-------------------------------------------------
 //retourne le premier jour de l'année choisie pour chaque mois
 //met a jour tout les mois
@@ -139,6 +139,10 @@ function recupyear() {
   //let btnValidYear = document.getElementById("validYear");
   //btnValidYear.addEventListener("click", () => {
   yearZone.addEventListener("input", function (event) {
+    //executer la fonction creerCardLocataire
+    creerCardLocataire();
+    console.log("je suis a creerCardLocataire");
+
     yearChoosed = yearZone.value;
     recupJoursReserve(yearChoosed);
     // nettoyage de la grille avant de mettre a jour suite au clic
@@ -215,117 +219,119 @@ cases.forEach((caseElement) => {
     caseElement.classList.toggle("clicked");
   });
 });
+//ajouter event lidteneu aux boutons de sauvegarde
+for (let i = 0; i < boutonSave.length; i++) {
+  boutonSave[i].addEventListener("click", () => {
+    let mars = document.querySelectorAll(".mars");
+    let avril = document.querySelectorAll(".avril");
+    let mai = document.querySelectorAll(".mai");
+    let juin = document.querySelectorAll(".juin");
+    let juillet = document.querySelectorAll(".juillet");
+    let aout = document.querySelectorAll(".aout");
+    let septembre = document.querySelectorAll(".septembre");
+    let octobre = document.querySelectorAll(".octobre");
+    let novembre = document.querySelectorAll(".novembre");
 
-boutonSave.addEventListener("click", () => {
-  let mars = document.querySelectorAll(".mars");
-  let avril = document.querySelectorAll(".avril");
-  let mai = document.querySelectorAll(".mai");
-  let juin = document.querySelectorAll(".juin");
-  let juillet = document.querySelectorAll(".juillet");
-  let aout = document.querySelectorAll(".aout");
-  let septembre = document.querySelectorAll(".septembre");
-  let octobre = document.querySelectorAll(".octobre");
-  let novembre = document.querySelectorAll(".novembre");
+    let marsTab = [];
+    let avrilTab = [];
+    let maiTab = [];
+    let juinTab = [];
+    let juilletTab = [];
+    let aoutTab = [];
+    let septembreTab = [];
+    let octobreTab = [];
+    let novembreTab = [];
+    for (let i = 0; i < mars.length; i++) {
+      if (mars[i].classList.contains("clicked")) {
+        marsTab[i] = true;
+      } else {
+        marsTab[i] = false;
+      }
+    }
+    for (let i = 0; i < avril.length; i++) {
+      if (avril[i].classList.contains("clicked")) {
+        avrilTab[i] = true;
+      } else {
+        avrilTab[i] = false;
+      }
+    }
+    for (let i = 0; i < mai.length; i++) {
+      if (mai[i].classList.contains("clicked")) {
+        maiTab[i] = true;
+      } else {
+        maiTab[i] = false;
+      }
+    }
+    for (let i = 0; i < juin.length; i++) {
+      if (juin[i].classList.contains("clicked")) {
+        juinTab[i] = true;
+      } else {
+        juinTab[i] = false;
+      }
+    }
+    for (let i = 0; i < juillet.length; i++) {
+      if (juillet[i].classList.contains("clicked")) {
+        juilletTab[i] = true;
+      } else {
+        juilletTab[i] = false;
+      }
+    }
+    for (let i = 0; i < aout.length; i++) {
+      if (aout[i].classList.contains("clicked")) {
+        aoutTab[i] = true;
+      } else {
+        aoutTab[i] = false;
+      }
+    }
+    for (let i = 0; i < septembre.length; i++) {
+      if (septembre[i].classList.contains("clicked")) {
+        septembreTab[i] = true;
+      } else {
+        septembreTab[i] = false;
+      }
+    }
+    for (let i = 0; i < octobre.length; i++) {
+      if (octobre[i].classList.contains("clicked")) {
+        octobreTab[i] = true;
+      } else {
+        octobreTab[i] = false;
+      }
+    }
+    for (let i = 0; i < novembre.length; i++) {
+      if (novembre[i].classList.contains("clicked")) {
+        novembreTab[i] = true;
+      } else {
+        novembreTab[i] = false;
+      }
+    }
 
-  let marsTab = [];
-  let avrilTab = [];
-  let maiTab = [];
-  let juinTab = [];
-  let juilletTab = [];
-  let aoutTab = [];
-  let septembreTab = [];
-  let octobreTab = [];
-  let novembreTab = [];
-  for (let i = 0; i < mars.length; i++) {
-    if (mars[i].classList.contains("clicked")) {
-      marsTab[i] = true;
-    } else {
-      marsTab[i] = false;
-    }
-  }
-  for (let i = 0; i < avril.length; i++) {
-    if (avril[i].classList.contains("clicked")) {
-      avrilTab[i] = true;
-    } else {
-      avrilTab[i] = false;
-    }
-  }
-  for (let i = 0; i < mai.length; i++) {
-    if (mai[i].classList.contains("clicked")) {
-      maiTab[i] = true;
-    } else {
-      maiTab[i] = false;
-    }
-  }
-  for (let i = 0; i < juin.length; i++) {
-    if (juin[i].classList.contains("clicked")) {
-      juinTab[i] = true;
-    } else {
-      juinTab[i] = false;
-    }
-  }
-  for (let i = 0; i < juillet.length; i++) {
-    if (juillet[i].classList.contains("clicked")) {
-      juilletTab[i] = true;
-    } else {
-      juilletTab[i] = false;
-    }
-  }
-  for (let i = 0; i < aout.length; i++) {
-    if (aout[i].classList.contains("clicked")) {
-      aoutTab[i] = true;
-    } else {
-      aoutTab[i] = false;
-    }
-  }
-  for (let i = 0; i < septembre.length; i++) {
-    if (septembre[i].classList.contains("clicked")) {
-      septembreTab[i] = true;
-    } else {
-      septembreTab[i] = false;
-    }
-  }
-  for (let i = 0; i < octobre.length; i++) {
-    if (octobre[i].classList.contains("clicked")) {
-      octobreTab[i] = true;
-    } else {
-      octobreTab[i] = false;
-    }
-  }
-  for (let i = 0; i < novembre.length; i++) {
-    if (novembre[i].classList.contains("clicked")) {
-      novembreTab[i] = true;
-    } else {
-      novembreTab[i] = false;
-    }
-  }
+    //faire un fichier json avec un marsTab, avrilTab, maiTab, juinTab, juilletTab, aoutTab, septembreTab, octobreTab, novembreTab
 
-  //faire un fichier json avec un marsTab, avrilTab, maiTab, juinTab, juilletTab, aoutTab, septembreTab, octobreTab, novembreTab
-
-  const dataAnnee = {
-    anneeId: yearChoosed,
-    mars: marsTab,
-    avril: avrilTab,
-    mai: maiTab,
-    juin: juinTab,
-    juillet: juilletTab,
-    aout: aoutTab,
-    septembre: septembreTab,
-    octobre: octobreTab,
-    novembre: novembreTab,
-  };
-  const chargeUtile = JSON.stringify(dataAnnee);
-  console.log(chargeUtile);
-  //envoyer au serveur au port 3000
-  fetch("http://localhost:3000/data", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: chargeUtile,
-  })
-    .then((response) => response.json())
-    .then((data) => console.log("Success:", data))
-    .catch((error) => console.error("Error:", error));
-  //console.log(dataMars);
-});
+    const dataAnnee = {
+      anneeId: yearChoosed,
+      mars: marsTab,
+      avril: avrilTab,
+      mai: maiTab,
+      juin: juinTab,
+      juillet: juilletTab,
+      aout: aoutTab,
+      septembre: septembreTab,
+      octobre: octobreTab,
+      novembre: novembreTab,
+    };
+    const chargeUtile = JSON.stringify(dataAnnee);
+    console.log(chargeUtile);
+    //envoyer au serveur au port 3000
+    fetch("http://localhost:3000/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: chargeUtile,
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Success:", data))
+      .catch((error) => console.error("Error:", error));
+    //console.log(dataMars);
+  });
+}

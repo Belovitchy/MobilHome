@@ -86,6 +86,18 @@ app.get("/locataires", async (req, res) => {
   }
 });
 
+app.delete("/locataires/:key", async (req, res) => {
+  const key = req.params.key;
+  const cheminFichier = path.join(__dirname, "locataires.json");
+  if (fs.existsSync(cheminFichier)) {
+    const lectureDonnee = fs.readFileSync(cheminFichier); //Lit le contenu du fichier JSON.
+    const donneeExistante = JSON.parse(lectureDonnee); //Convertit le contenu du fichier JSON en un objet JavaScript.
+    delete donneeExistante[key];
+    fs.writeFileSync(cheminFichier, JSON.stringify(donneeExistante, null, 2));
+    res.status(200).json({ message: "Données enregistrées avec succès" });
+  }
+});
+
 app.get("/data/:anneeId", async (req, res) => {
   const anneeId = req.params.anneeId;
   const filePath = path.join(__dirname, "data.json");
