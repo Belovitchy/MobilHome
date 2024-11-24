@@ -351,6 +351,10 @@ async function popupInfo(idLocataire) {
   boutonSupp.addEventListener("click", () => {
     //supprimer le locataire dans le fichier json
     supprimeLocataire(idLocataire);
+    const allInput = document.querySelectorAll(".dataLoc");
+    for (let i = 0; i < allInput.length; i++) {
+      allInput[i].value = "";
+    }
   });
 }
 
