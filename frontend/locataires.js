@@ -60,12 +60,19 @@ function popupCreer(mois, year) {
   for (let i = 0; i < allInput.length; i++) {
     allInput[i].value = "";
   }
+  const zoneArrivee = document.getElementById("arrive");
+  const zoneDepart = document.getElementById("depart");
   const boutonQuitter = document.getElementById("quit");
   const boutonSupp = document.getElementById("supp");
   const boutonSave = document.getElementById("enr");
 
   boutonSave.addEventListener("click", () => {
-    enregistreLocataireMois(mois, year);
+    if (!zoneArrivee.value == "" && !zoneDepart.value == "") {
+      console.log("arrive" + zoneArrivee.value + "depart" + zoneDepart.value);
+      enregistreLocataireMois(mois, year);
+    } else {
+      alert("Veuillez renseigner les dates d'arrivee et de depart");
+    }
   });
 
   boutonQuitter.addEventListener("click", () => {
@@ -339,6 +346,11 @@ async function popupInfo(idLocataire) {
   const mois = client.mois;
   const year = client.annee;
   boutonSave.addEventListener("click", () => {
+    console.log("enregistrement");
+    if (zoneArrivee.value == "" || zoneDepart.value == "") {
+      console.log("arrive" + zoneArrivee.value + "depart" + zoneDepart.value);
+      return;
+    }
     enregistreLocataireMois(mois, year);
   });
 

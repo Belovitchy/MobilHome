@@ -24,8 +24,45 @@ const dayName = [
   "Vendredi",
   "Samedi",
 ];
-let yearChoosed = 2021;
+//let yearChoosed = 2021;
 //recupJoursReserve(yearChoosed);
+demarage();
+function demarage() {
+  let mars = "mars";
+  let avril = "avril";
+  let mai = "mai";
+  let juin = "juin";
+  let juillet = "juillet";
+  let aout = "aout";
+  let septembre = "septembre";
+  let octobre = "octobre";
+  let novembre = "novembre";
+  let firstDayMonth = [];
+  let yearZone = document.getElementById("year");
+  let yearChoosed = yearZone.value;
+  recupJoursReserve(yearChoosed);
+  // nettoyage de la grille avant de mettre a jour suite au clic
+  let casesANettoyer = document.querySelectorAll(
+    ".mars, .avril, .mai, .juin, .juillet, .aout, .septembre, .octobre, .novembre"
+  );
+  for (let k = 0; k < casesANettoyer.length; k++) {
+    casesANettoyer[k].innerText = "";
+  }
+  // remplir le tableau firstDayMonth avec le nom de chaque premier jour de chaque mois
+  for (let j = 0; j < month.length; j++) {
+    firstDayMonth[j] = getFirstDayOfMonth(yearChoosed, j);
+  }
+  //mise a jour de tout les mois
+  miseAJourMois(firstDayMonth[2], mars, "m");
+  miseAJourMois(firstDayMonth[3], avril, "a");
+  miseAJourMois(firstDayMonth[4], mai, "i");
+  miseAJourMois(firstDayMonth[5], juin, "j");
+  miseAJourMois(firstDayMonth[6], juillet, "u");
+  miseAJourMois(firstDayMonth[7], aout, "t");
+  miseAJourMois(firstDayMonth[8], septembre, "s");
+  miseAJourMois(firstDayMonth[9], octobre, "o");
+  miseAJourMois(firstDayMonth[10], novembre, "n");
+}
 
 function recupJoursReserve(annee) {
   console.log(annee);
@@ -136,14 +173,12 @@ function recupyear() {
 
   //capture de l'année choisie
   let yearZone = document.getElementById("year");
-  //let btnValidYear = document.getElementById("validYear");
-  //btnValidYear.addEventListener("click", () => {
   yearZone.addEventListener("input", function (event) {
     //executer la fonction creerCardLocataire
     creerCardLocataire();
     console.log("je suis a creerCardLocataire");
 
-    yearChoosed = yearZone.value;
+    let yearChoosed = yearZone.value;
     recupJoursReserve(yearChoosed);
     // nettoyage de la grille avant de mettre a jour suite au clic
     let casesANettoyer = document.querySelectorAll(
