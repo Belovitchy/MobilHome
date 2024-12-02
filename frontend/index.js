@@ -24,9 +24,84 @@ const dayName = [
   "Vendredi",
   "Samedi",
 ];
+
+function ajouterIdDate(annee) {
+  const cases = document.querySelectorAll(".date");
+  for (let i = 0; i < cases.length; i++) {
+    const parent = cases[i].parentElement;
+    const jour = parent.innerText;
+    //si parent contient la class mars
+    if (parent.classList.contains("mars")) {
+      cases[i].id = annee + "-" + "03" + "-" + jour.toString().padStart(2, "0");
+    }
+    if (parent.classList.contains("avril")) {
+      cases[i].id = annee + "-" + "04" + "-" + jour.toString().padStart(2, "0");
+    }
+    if (parent.classList.contains("mai")) {
+      cases[i].id = annee + "-" + "05" + "-" + jour.toString().padStart(2, "0");
+    }
+    if (parent.classList.contains("juin")) {
+      cases[i].id = annee + "-" + "06" + "-" + jour.toString().padStart(2, "0");
+    }
+    if (parent.classList.contains("juillet")) {
+      cases[i].id = annee + "-" + "07" + "-" + jour.toString().padStart(2, "0");
+    }
+    if (parent.classList.contains("aout")) {
+      cases[i].id = annee + "-" + "08" + "-" + jour.toString().padStart(2, "0");
+    }
+    if (parent.classList.contains("septembre")) {
+      cases[i].id = annee + "-" + "09" + "-" + jour.toString().padStart(2, "0");
+    }
+    if (parent.classList.contains("octobre")) {
+      cases[i].id = annee + "-" + "10" + "-" + jour.toString().padStart(2, "0");
+    }
+    if (parent.classList.contains("novembre")) {
+      cases[i].id = annee + "-" + "11" + "-" + jour.toString().padStart(2, "0");
+    }
+  }
+}
+// function nettoyerTextNodes() {
+//   let casesANettoyer = document.querySelectorAll(
+//     ".mars, .avril, .mai, .juin, .juillet, .aout, .septembre, .octobre, .novembre"
+//   );
+
+//   casesANettoyer.forEach((caseElement) => {
+//     let childNodes = Array.from(caseElement.childNodes);
+//     childNodes.forEach((child) => {
+//       if (child.nodeType === Node.TEXT_NODE && child.nodeValue.trim() !== "") {
+//         caseElement.removeChild(child);
+//       }
+//     });
+//   });
+// }
+
+//ajouter 2 div a chaque case
+function ajouterDivCase() {
+  let cases = document.querySelectorAll(
+    ".mars, .avril, .mai, .juin, .juillet, .aout, .septembre, .octobre, .novembre"
+  );
+  for (let i = 0; i < cases.length; i++) {
+    let divMatin = document.createElement("div");
+    let divAprem = document.createElement("div");
+    let divParent = document.createElement("div");
+    //ajouter une classe au div
+    divParent.classList.add("date");
+    divMatin.classList.add("demi");
+    divMatin.classList.add("matin");
+    divAprem.classList.add("demi");
+    divAprem.classList.add("aprem");
+    cases[i].appendChild(divParent);
+    divParent.appendChild(divMatin);
+    divParent.appendChild(divAprem);
+  }
+}
+
+let yearZone = document.getElementById("year");
+let yearChoosed = yearZone.value;
 //let yearChoosed = 2021;
 //recupJoursReserve(yearChoosed);
 demarage();
+
 function demarage() {
   let mars = "mars";
   let avril = "avril";
@@ -45,9 +120,19 @@ function demarage() {
   let casesANettoyer = document.querySelectorAll(
     ".mars, .avril, .mai, .juin, .juillet, .aout, .septembre, .octobre, .novembre"
   );
+  // casesANettoyer.forEach((caseElement) => {
+  //   // Parcourir les nœuds enfants
+  //   caseElement.childNodes.forEach((child) => {
+  //     // Si le nœud est un nœud de texte, le supprimer
+  //     if (child.nodeType === Node.TEXT_NODE && child.nodeValue.trim() !== "") {
+  //       caseElement.removeChild(child);
+  //     }
+  //   });
+  // });
   for (let k = 0; k < casesANettoyer.length; k++) {
     casesANettoyer[k].innerText = "";
   }
+
   // remplir le tableau firstDayMonth avec le nom de chaque premier jour de chaque mois
   for (let j = 0; j < month.length; j++) {
     firstDayMonth[j] = getFirstDayOfMonth(yearChoosed, j);
@@ -62,6 +147,9 @@ function demarage() {
   miseAJourMois(firstDayMonth[8], septembre, "s");
   miseAJourMois(firstDayMonth[9], octobre, "o");
   miseAJourMois(firstDayMonth[10], novembre, "n");
+  ajouterDivCase();
+  ajouterIdDate(yearChoosed);
+  console.log(casesANettoyer[5].innerText);
 }
 
 function recupJoursReserve(annee) {
@@ -184,9 +272,23 @@ function recupyear() {
     let casesANettoyer = document.querySelectorAll(
       ".mars, .avril, .mai, .juin, .juillet, .aout, .septembre, .octobre, .novembre"
     );
+    // casesANettoyer.forEach((caseElement) => {
+    //   // Parcourir les nœuds enfants
+    //   caseElement.childNodes.forEach((child) => {
+    //     // Si le nœud est un nœud de texte, le supprimer
+    //     if (
+    //       child.nodeType === Node.TEXT_NODE &&
+    //       child.nodeValue.trim() !== ""
+    //     ) {
+    //       caseElement.removeChild(child);
+    //     }
+    //   });
+    // });
     for (let k = 0; k < casesANettoyer.length; k++) {
       casesANettoyer[k].innerText = "";
     }
+
+    console.log(casesANettoyer[5]);
     // remplir le tableau firstDayMonth avec le nom de chaque premier jour de chaque mois
     for (let j = 0; j < month.length; j++) {
       firstDayMonth[j] = getFirstDayOfMonth(yearChoosed, j);
@@ -201,6 +303,8 @@ function recupyear() {
     miseAJourMois(firstDayMonth[8], septembre, "s");
     miseAJourMois(firstDayMonth[9], octobre, "o");
     miseAJourMois(firstDayMonth[10], novembre, "n");
+    ajouterDivCase();
+    ajouterIdDate(yearChoosed);
   });
 
   return firstDayMonth;
@@ -234,6 +338,7 @@ function miseAJourMois(premierJourDuMois, mois, sigleMois) {
     "." + mois + "." + premierJourDuMois
   );
   baliseUnMois.innerText = "1";
+
   let idDepart = baliseUnMois.id;
   idDepart = idDepart.substring(1);
   idDepart = +idDepart + 1;

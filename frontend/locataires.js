@@ -93,6 +93,7 @@ function enregistreLocataireMois(mois, year) {
   const dataClient = {
     annee: year,
     mois: mois,
+    couleur: document.getElementById("color").value,
     arrive: document.getElementById("arrive").value,
     depart: document.getElementById("depart").value,
     telephone: document.getElementById("tel").value,
@@ -157,6 +158,11 @@ async function recupListClients() {
 
 export async function creerCardLocataire() {
   const clientsData = await recupListClients();
+  //nettoyer les cases avant de mettre a jour
+  const caseAnettoyer = document.querySelectorAll(".aprem, .matin");
+  for (let i = 0; i < caseAnettoyer.length; i++) {
+    caseAnettoyer[i].style.backgroundColor = null;
+  }
 
   if (!clientsData) {
     console.error("Erreur lors de la récupération des données des clients");
@@ -203,11 +209,13 @@ export async function creerCardLocataire() {
 //creer une div par client a cette etape l'annee est deja triée
 //si mois est mars,avril...alors parent est .cardsMars,...
 //pour chaque element de mois creer une div enfant
+
+//ajouter un id a la div
 function creerDivLocataire(mois, idDiv) {
   //nettoyer les div avant de les remplir
-  const parentMars = document.getElementById(idDiv);
+  const parentMois = document.getElementById(idDiv);
   //supprimer tout les enfants
-  parentMars.innerHTML = "";
+  parentMois.innerHTML = "";
 
   console.log(mois);
   if (mois.length > 0) {
@@ -217,6 +225,7 @@ function creerDivLocataire(mois, idDiv) {
       locElement.id =
         mois[i].nom1.toUpperCase() + "-" + mois[i].prenom1.toUpperCase();
       locElement.classList.add("locataire");
+
       locElement.addEventListener("click", function (event) {
         //recuperer l'id du locataire cliqueé
         const idLoc = event.currentTarget.id;
@@ -227,8 +236,11 @@ function creerDivLocataire(mois, idDiv) {
       const nomLoc = document.createElement("h4");
       nomLoc.innerText =
         LocMois.nom1 + " du " + LocMois.arrive + " au " + LocMois.depart;
+      nomLoc.style.backgroundColor = mois[i].couleur;
       locElement.appendChild(nomLoc);
-      parentMars.appendChild(locElement);
+      parentMois.appendChild(locElement);
+      console.log(locElement.id);
+      remplissageCalendrier(LocMois.arrive, LocMois.depart, LocMois.couleur);
     }
   } else {
     console.log("pas de locataire");
@@ -282,6 +294,8 @@ async function popupInfo(idLocataire) {
   zoneArrive.value = client.arrive;
   const zoneDepart = document.getElementById("depart");
   zoneDepart.value = client.depart;
+  const couleur = document.getElementById("color");
+  couleur.value = client.couleur;
   const zoneNom1 = document.getElementById("nom1");
   zoneNom1.value = client.nom1;
   const zonePrenom1 = document.getElementById("prenom1");
@@ -346,11 +360,11 @@ async function popupInfo(idLocataire) {
   const mois = client.mois;
   const year = client.annee;
   boutonSave.addEventListener("click", () => {
-    console.log("enregistrement");
-    if (zoneArrivee.value == "" || zoneDepart.value == "") {
-      console.log("arrive" + zoneArrivee.value + "depart" + zoneDepart.value);
-      return;
-    }
+    // console.log("enregistrement");
+    // if (zoneArrivee.value == "" || zoneDepart.value == "") {
+    //   console.log("arrive" + zoneArrivee.value + "depart" + zoneDepart.value);
+    //   return;
+    // }
     enregistreLocataireMois(mois, year);
   });
 
@@ -389,5 +403,43 @@ async function supprimeLocataire(idLocataire) {
     }
   } catch (error) {
     console.error("Erreur lors de la suppression du client:", error);
+  }
+}
+
+//mettre a jour calendrier en fonction des clients du mois
+function remplissageCalendrier(arrive, depart, couleur) {
+  const dateArrive = new Date(arrive);
+  const dateDepart = new Date(depart);
+  const dateArray = [];
+  let date = new Date(dateArrive);
+  date.setDate(date.getDate() + 1); //partir au jour d'apres
+  while (date < dateDepart) {
+    dateArray.push(date.toISOString().split("T")[0]);
+    date.setDate(date.getDate() + 1);
+  }
+  const caseDateArrivee = document.getElementById(arrive);
+  const caseDateDepart = document.getElementById(depart);
+
+  console.log(caseDateArrivee);
+  //recupérer la div enfant qui a aprem comme class
+  for (let child of caseDateArrivee.children) {
+    if (child.classList.contains("aprem")) {
+      //mettre le style de idLocataire.couleur
+      child.style.backgroundColor = couleur;
+    }
+  }
+
+  for (let child of caseDateDepart.children) {
+    if (child.classList.contains("matin")) {
+      //mettre le style de idLocataire.couleur
+      child.style.backgroundColor = couleur;
+    }
+  }
+
+  for (let i = 0; i < dateArray.length; i++) {
+    const caseDate = document.getElementById(dateArray[i]);
+    for (let child of caseDate.children) {
+      child.style.backgroundColor = couleur;
+    }
   }
 }

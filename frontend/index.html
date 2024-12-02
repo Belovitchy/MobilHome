@@ -48,10 +48,13 @@
     </nav>
     <div class="popup">
       <h3>Ajouter un locataire</h3>
-      <span>Arrivée le: </span
-      ><input class="dataLoc" type="date" name="date" id="arrive" /><span
-        >Départ le: </span
-      ><input class="dataLoc" type="date" name="date" id="depart" />
+      <section class="entete">
+        <span>Arrivée le: </span
+        ><input class="dataLoc" type="date" name="date" id="arrive" /><span
+          >Départ le: </span
+        ><input class="dataLoc" type="date" name="date" id="depart" />
+        <input type="color" name="color" id="color" />
+      </section>
       <section class="infoLocataires">
         <div class="nom">
           <span>Nom</span><br />
@@ -123,6 +126,7 @@
         <div class="buttonsPop">
           <button id="enr">Enregistrer</button>
           <button id="supp">Supprimer</button>
+          <button id="msg">Message</button>
           <button id="quit">Quitter</button>
         </div>
       </section>
