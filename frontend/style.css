@@ -288,7 +288,8 @@ input {
 #enr,
 #quit,
 #supp,
-#msg {
+#msg,
+.fermer {
   border-radius: 20px;
   background: rgba(169, 169, 169, 0.856);
   font-size: 1.5rem;
@@ -300,7 +301,8 @@ input {
 #enr:hover,
 #quit:hover,
 #supp:hover,
-#msg:hover {
+#msg:hover,
+.fermer:hover {
   cursor: pointer;
   background: rgb(88, 85, 85);
 }
@@ -346,4 +348,24 @@ input {
   width: 50%;
   height: 35px;
   /* background-color: rgba(218, 86, 147, 0.856) !important; */
+}
+.popupAlert {
+  display: none;
+  position: fixed;
+  z-index: 6;
+  width: 400px;
+  height: auto;
+  text-align: center;
+  padding: 10px;
+
+  border-radius: 20px;
+  border: solid 3px black;
+  box-shadow: black 0px 0px 14px 7px;
+
+  background-color: rgba(169, 169, 169, 1);
+}
+
+.message {
+  margin: 20px;
+  font-size: 1.4rem;
 }
