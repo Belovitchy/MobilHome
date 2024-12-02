@@ -13,7 +13,7 @@ for (let i = 0; i < allBouton.length; i++) {
   allBouton[i].addEventListener("click", function (event) {
     //recuperer l'id du bouton clické
     const idBouton = event.target.id;
-    const year = document.getElementById("year").value;
+    // const year = document.getElementById("year").value;
     //recup le mois en fonction de idBouton avec un switch
     let mois;
     switch (idBouton) {
@@ -45,14 +45,15 @@ for (let i = 0; i < allBouton.length; i++) {
         mois = novembre;
         break;
     }
-    popupCreer(mois, year);
+    popupCreer(mois);
   });
 }
 
 //prevoir de l'appeler au chargement d'annee
 creerCardLocataire();
 
-function popupCreer(mois, year) {
+function popupCreer(mois) {
+  const year = document.getElementById("year").value;
   const popup = document.querySelector(".popup");
   popup.style.display = "block";
   //vider les inputs
