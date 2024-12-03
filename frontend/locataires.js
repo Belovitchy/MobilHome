@@ -71,19 +71,102 @@ function popupCreer(mois) {
 
   boutonSave.addEventListener("click", () => {
     // ajouter toutes les securite zone pas reserve, nom etc...
+    const anneClientArrive = zoneArrivee.value.split("-")[0];
+    const moisClientArrive = zoneArrivee.value.split("-")[1];
+    const moisClientDepart = zoneDepart.value.split("-")[1];
+    //ajouter si chevauchement entre 2 locataires
+    const dateArrive = new Date(zoneArrivee.value);
+    const dateDepart = new Date(zoneDepart.value);
+    const dateArray = [];
+    let date = new Date(dateArrive);
+    date.setDate(date.getDate() + 1); //partir au jour d'apres
+    while (date < dateDepart) {
+      dateArray.push(date.toISOString().split("T")[0]);
+      date.setDate(date.getDate() + 1);
+    }
+    const caseDateArrivee = document.getElementById(zoneArrivee.value);
+    const caseDateDepart = document.getElementById(zoneDepart.value);
 
-    if (
-      !zoneArrivee.value == "" &&
-      !zoneDepart.value == "" &&
-      !zoneNom.value == ""
-    ) {
-      //console.log("arrive" + zoneArrivee.value + "depart" + zoneDepart.value);
-      enregistreLocataireMois(mois, year);
+    //console.log(caseDateArrivee);
+    //recupérer la div enfant qui a aprem comme class
+    for (let child of caseDateArrivee.children) {
+      if (
+        child.classList.contains("aprem") &&
+        child.classList.contains("reserve")
+      ) {
+        popupAlert("La date d'arrivee est déja reservée");
+      }
+    }
+
+    for (let child of caseDateDepart.children) {
+      if (
+        child.classList.contains("matin") &&
+        child.classList.contains("reserve")
+      ) {
+        popupAlert("La date de depart est déja reservée");
+      }
+    }
+
+    for (let i = 0; i < dateArray.length; i++) {
+      const caseDate = document.getElementById(dateArray[i]);
+      for (let child of caseDate.children) {
+        if (child.classList.contains("reserve")) {
+          popupAlert("La date choisie est deja reservée");
+        }
+      }
+    }
+    if (anneClientArrive != year) {
+      popupAlert("L'année d'arrivee ne correspond pas a l'annee choisie");
     } else {
-      popupAlert(
-        "Veuillez renseigner les dates d'arrivee et de depart ainsi que le nom du locataire"
-      );
-      //alert("Veuillez renseigner les dates d'arrivee et de depart");
+      let moiAtest = "";
+      switch (mois) {
+        case mars:
+          moiAtest = "03";
+          break;
+        case avril:
+          moiAtest = "04";
+          break;
+        case mai:
+          moiAtest = "05";
+          break;
+        case juin:
+          moiAtest = "06";
+          break;
+        case juillet:
+          moiAtest = "07";
+          break;
+        case aout:
+          moiAtest = "08";
+          break;
+        case septembre:
+          moiAtest = "09";
+          break;
+        case octobre:
+          moiAtest = "10";
+          break;
+        case novembre:
+          moiAtest = "11";
+          break;
+      }
+      if (moisClientArrive != moiAtest && moisClientDepart != moiAtest) {
+        console.log(moiAtest);
+        console.log(moisClientArrive);
+        popupAlert("Le mois ne correspondent pas");
+      } else {
+        if (
+          !zoneArrivee.value == "" &&
+          !zoneDepart.value == "" &&
+          !zoneNom.value == ""
+        ) {
+          //console.log("arrive" + zoneArrivee.value + "depart" + zoneDepart.value);
+          enregistreLocataireMois(mois, year);
+        } else {
+          popupAlert(
+            "Veuillez renseigner les dates d'arrivee et de depart ainsi que le nom du locataire"
+          );
+          //alert("Veuillez renseigner les dates d'arrivee et de depart");
+        }
+      }
     }
   });
 
@@ -454,6 +537,7 @@ function remplissageCalendrier(arrive, depart, couleur) {
     if (child.classList.contains("aprem")) {
       //mettre le style de idLocataire.couleur
       child.style.backgroundColor = couleur;
+      child.classList.add("reserve");
     }
   }
 
@@ -461,6 +545,7 @@ function remplissageCalendrier(arrive, depart, couleur) {
     if (child.classList.contains("matin")) {
       //mettre le style de idLocataire.couleur
       child.style.backgroundColor = couleur;
+      child.classList.add("reserve");
     }
   }
 
@@ -468,6 +553,7 @@ function remplissageCalendrier(arrive, depart, couleur) {
     const caseDate = document.getElementById(dateArray[i]);
     for (let child of caseDate.children) {
       child.style.backgroundColor = couleur;
+      child.classList.add("reserve");
     }
   }
 }

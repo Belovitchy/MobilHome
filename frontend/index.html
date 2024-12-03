@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./style.css" />
     <script type="module" src="./index.js" defer></script>
     <script type="module" src="./locataires.js" defer></script>
+    <script type="module" src="./message.js" defer></script>
   </head>
   <body>
     <nav class="navbar">
@@ -43,6 +44,17 @@
           <a href="https://www.mobil-home-serenity.com/" target="_blank"
             >MHSerenity</a
           >
+        </li>
+        <li>
+          <label id="yearLabel" for="year">Année:</label>
+          <input
+            type="number"
+            id="year"
+            name="year"
+            min="2021"
+            max="3000"
+            value="2025"
+          />
         </li>
       </ul>
     </nav>
@@ -136,19 +148,11 @@
         </div>
       </section>
     </div>
+    <section class="popupMessage">
+      <h3>Messagerie</h3>
+    </section>
     <h1>Mobil Home Dunes De Contis</h1>
 
-    <div class="choose-year">
-      <label for="year">Année:</label>
-      <input
-        type="number"
-        id="year"
-        name="year"
-        min="2021"
-        max="3000"
-        value="2025"
-      />
-    </div>
     <div class="calendar">
       <div>
         <h2>MARS<button class="save">Enregistrer</button></h2>
