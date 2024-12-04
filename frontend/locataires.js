@@ -53,6 +53,11 @@ for (let i = 0; i < allBouton.length; i++) {
 creerCardLocataire();
 
 function popupCreer(mois) {
+  const inter = true;
+  const zoneTitre = document.getElementById("titrePopup");
+  const btnValider = document.getElementById("enr");
+  btnValider.innerText = "Enregistrer";
+  zoneTitre.innerText = "Ajouter locataire";
   const year = document.getElementById("year").value;
   const popup = document.querySelector(".popup");
   popup.style.display = "block";
@@ -61,112 +66,21 @@ function popupCreer(mois) {
   for (let i = 0; i < allInput.length; i++) {
     allInput[i].value = "";
   }
-  const zoneArrivee = document.getElementById("arrive");
-  const zoneDepart = document.getElementById("depart");
-
-  const zoneNom = document.getElementById("nom1");
   const boutonQuitter = document.getElementById("quit");
   const boutonSupp = document.getElementById("supp");
   const boutonSave = document.getElementById("enr");
 
   boutonSave.addEventListener("click", () => {
     // ajouter toutes les securite zone pas reserve, nom etc...
-    const anneClientArrive = zoneArrivee.value.split("-")[0];
-    const moisClientArrive = zoneArrivee.value.split("-")[1];
-    const moisClientDepart = zoneDepart.value.split("-")[1];
-    //ajouter si chevauchement entre 2 locataires
-    const dateArrive = new Date(zoneArrivee.value);
-    const dateDepart = new Date(zoneDepart.value);
-    const dateArray = [];
-    let date = new Date(dateArrive);
-    date.setDate(date.getDate() + 1); //partir au jour d'apres
-    while (date < dateDepart) {
-      dateArray.push(date.toISOString().split("T")[0]);
-      date.setDate(date.getDate() + 1);
-    }
-    const caseDateArrivee = document.getElementById(zoneArrivee.value);
-    const caseDateDepart = document.getElementById(zoneDepart.value);
-
-    //console.log(caseDateArrivee);
-    //recupérer la div enfant qui a aprem comme class
-    for (let child of caseDateArrivee.children) {
-      if (
-        child.classList.contains("aprem") &&
-        child.classList.contains("reserve")
-      ) {
-        popupAlert("La date d'arrivee est déja reservée");
-      }
-    }
-
-    for (let child of caseDateDepart.children) {
-      if (
-        child.classList.contains("matin") &&
-        child.classList.contains("reserve")
-      ) {
-        popupAlert("La date de depart est déja reservée");
-      }
-    }
-
-    for (let i = 0; i < dateArray.length; i++) {
-      const caseDate = document.getElementById(dateArray[i]);
-      for (let child of caseDate.children) {
-        if (child.classList.contains("reserve")) {
-          popupAlert("La date choisie est deja reservée");
-        }
-      }
-    }
-    if (anneClientArrive != year) {
-      popupAlert("L'année d'arrivee ne correspond pas a l'annee choisie");
-    } else {
-      let moiAtest = "";
-      switch (mois) {
-        case mars:
-          moiAtest = "03";
-          break;
-        case avril:
-          moiAtest = "04";
-          break;
-        case mai:
-          moiAtest = "05";
-          break;
-        case juin:
-          moiAtest = "06";
-          break;
-        case juillet:
-          moiAtest = "07";
-          break;
-        case aout:
-          moiAtest = "08";
-          break;
-        case septembre:
-          moiAtest = "09";
-          break;
-        case octobre:
-          moiAtest = "10";
-          break;
-        case novembre:
-          moiAtest = "11";
-          break;
-      }
-      if (moisClientArrive != moiAtest && moisClientDepart != moiAtest) {
-        console.log(moiAtest);
-        console.log(moisClientArrive);
-        popupAlert("Le mois ne correspondent pas");
-      } else {
-        if (
-          !zoneArrivee.value == "" &&
-          !zoneDepart.value == "" &&
-          !zoneNom.value == ""
-        ) {
-          //console.log("arrive" + zoneArrivee.value + "depart" + zoneDepart.value);
-          enregistreLocataireMois(mois, year);
-        } else {
-          popupAlert(
-            "Veuillez renseigner les dates d'arrivee et de depart ainsi que le nom du locataire"
-          );
-          //alert("Veuillez renseigner les dates d'arrivee et de depart");
-        }
-      }
+    if (
+      inter &&
+      verifAnne(year) &&
+      verifMois(mois) &&
+      verifClient() &&
+      verifDoublon() &&
+      verifArriveAvantDepart()
+    ) {
+      enregistreLocataireMois(mois, year);
     }
   });
 
@@ -177,12 +91,168 @@ function popupCreer(mois) {
   });
 
   boutonSupp.addEventListener("click", () => {
+    const demiANettoyer = document.querySelectorAll(".demi");
+    for (let i = 0; i < demiANettoyer.length; i++) {
+      demiANettoyer[i].classList.remove("reserve");
+    }
     const allInput = document.querySelectorAll(".dataLoc");
     for (let i = 0; i < allInput.length; i++) {
       allInput[i].value = "";
     }
   });
 }
+//---------------------------------------------------------------------------------------
+//ici toutes les fonctions qui verifient toutes les conditions avant d'enregistrer
+//---------------------------------------------------------------------------------------
+
+//verifier que l'arrivee et bien avant le depart
+function verifArriveAvantDepart() {
+  const zoneArrivee = document.getElementById("arrive");
+  const zoneDepart = document.getElementById("depart");
+  const dateArrive = new Date(zoneArrivee.value);
+  const dateDepart = new Date(zoneDepart.value);
+  console.log(dateArrive);
+  console.log(dateDepart);
+  if (dateArrive >= dateDepart) {
+    popupAlert("le départ est avant l'arrivée");
+    return false;
+  } else {
+    return true;
+  }
+}
+//verifier l'annee
+function verifAnne(year) {
+  const zoneArrivee = document.getElementById("arrive");
+  const anneClientArrive = zoneArrivee.value.split("-")[0];
+  if (anneClientArrive != year) {
+    popupAlert("L'année d'arrivee ne correspond pas a l'annee choisie");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+//verifier le mois
+function verifMois(mois) {
+  const zoneArrivee = document.getElementById("arrive");
+  const zoneDepart = document.getElementById("depart");
+  const moisClientArrive = zoneArrivee.value.split("-")[1];
+  const moisClientDepart = zoneDepart.value.split("-")[1];
+  let moiAtest = "";
+  switch (mois) {
+    case mars:
+      moiAtest = "03";
+      break;
+    case avril:
+      moiAtest = "04";
+      break;
+    case mai:
+      moiAtest = "05";
+      break;
+    case juin:
+      moiAtest = "06";
+      break;
+    case juillet:
+      moiAtest = "07";
+      break;
+    case aout:
+      moiAtest = "08";
+      break;
+    case septembre:
+      moiAtest = "09";
+      break;
+    case octobre:
+      moiAtest = "10";
+      break;
+    case novembre:
+      moiAtest = "11";
+      break;
+  }
+  if (moisClientArrive != moiAtest && moisClientDepart != moiAtest) {
+    console.log(moiAtest);
+    console.log(moisClientArrive);
+    popupAlert("Le mois ne correspondent pas");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+//verifier que arrivée depart et nom sont renseignées
+function verifClient() {
+  const zoneNom = document.getElementById("nom1");
+  const zonePrenom = document.getElementById("prenom1");
+  const zoneArrivee = document.getElementById("arrive");
+  const zoneDepart = document.getElementById("depart");
+  if (
+    zoneArrivee.value == "" ||
+    zoneDepart.value == "" ||
+    zoneNom.value == "" ||
+    zonePrenom.value == ""
+  ) {
+    popupAlert(
+      "Veuillez renseigner les dates d'arrivee et de depart ainsi que le nom et le prénom du locataire"
+    );
+    return false;
+  } else {
+    return true;
+  }
+}
+
+//verifier qu'il n'y a pas de doublons
+
+function verifDoublon() {
+  const zoneArrivee = document.getElementById("arrive");
+  const zoneDepart = document.getElementById("depart");
+  const dateArrive = new Date(zoneArrivee.value);
+  const dateDepart = new Date(zoneDepart.value);
+  const dateArray = [];
+  let date = new Date(dateArrive);
+  date.setDate(date.getDate() + 1); //partir au jour d'apres
+  while (date < dateDepart) {
+    dateArray.push(date.toISOString().split("T")[0]);
+    date.setDate(date.getDate() + 1);
+  }
+  const caseDateArrivee = document.getElementById(zoneArrivee.value);
+  const caseDateDepart = document.getElementById(zoneDepart.value);
+
+  //console.log(caseDateArrivee);
+  //recupérer la div enfant qui a aprem comme class
+  for (let child of caseDateArrivee.children) {
+    if (
+      child.classList.contains("aprem") &&
+      child.classList.contains("reserve")
+    ) {
+      popupAlert("La date d'arrivée est déjà réservée");
+      return false;
+    }
+  }
+
+  for (let child of caseDateDepart.children) {
+    if (
+      child.classList.contains("matin") &&
+      child.classList.contains("reserve")
+    ) {
+      popupAlert("La date de départ est déjà réservée");
+      return false;
+    }
+  }
+
+  for (let i = 0; i < dateArray.length; i++) {
+    const caseDate = document.getElementById(dateArray[i]);
+    for (let child of caseDate.children) {
+      if (child.classList.contains("reserve")) {
+        popupAlert("La date choisie est déjà réservée");
+        console.log("ici");
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 export function popupAlert(message) {
   const alert = document.querySelector(".popupAlert");
@@ -310,7 +380,7 @@ export async function creerCardLocataire() {
     creerDivLocataire([], "cardsSeptembre");
     creerDivLocataire([], "cardsOctobre");
     creerDivLocataire([], "cardsNovembre");
-    popupAlert("Aucun client trouvé pour l'année " + year);
+    //popupAlert("Aucun client trouvé pour l'année " + year);
   }
 }
 
@@ -387,6 +457,10 @@ function trierAnneeParMois(listClientAnnee) {
 }
 
 async function popupInfo(idLocataire) {
+  const inter = false;
+  const zoneTitre = document.getElementById("titrePopup");
+
+  zoneTitre.innerText = "Info locataire";
   const popup = document.querySelector(".popup");
   popup.style.display = "block";
   //vider les inputs
@@ -465,15 +539,58 @@ async function popupInfo(idLocataire) {
   const boutonQuitter = document.getElementById("quit");
   const boutonSupp = document.getElementById("supp");
   const boutonSave = document.getElementById("enr");
+  boutonSave.innerText = "Modifier";
   const mois = client.mois;
   const year = client.annee;
   boutonSave.addEventListener("click", () => {
-    // console.log("enregistrement");
-    // if (zoneArrivee.value == "" || zoneDepart.value == "") {
-    //   console.log("arrive" + zoneArrivee.value + "depart" + zoneDepart.value);
-    //   return;
-    // }
-    enregistreLocataireMois(mois, year);
+    const dateArrive = new Date(client.arrive);
+    const dateDepart = new Date(client.depart);
+    const dateArray = [];
+    let date = new Date(dateArrive);
+    date.setDate(date.getDate() + 1); //partir au jour d'apres
+    while (date < dateDepart) {
+      dateArray.push(date.toISOString().split("T")[0]);
+      date.setDate(date.getDate() + 1);
+    }
+    const caseDateArrivee = document.getElementById(client.arrive);
+    const caseDateDepart = document.getElementById(client.depart);
+
+    //console.log(caseDateArrivee);
+    //recupérer la div enfant qui a aprem comme class
+    for (let child of caseDateArrivee.children) {
+      if (child.classList.contains("aprem")) {
+        child.classList.remove("reserve");
+        console.log(child);
+      }
+    }
+
+    for (let child of caseDateDepart.children) {
+      if (child.classList.contains("matin")) {
+        //mettre le style de idLocataire.couleur
+
+        child.classList.remove("reserve");
+        console.log(child);
+      }
+    }
+
+    for (let i = 0; i < dateArray.length; i++) {
+      const caseDate = document.getElementById(dateArray[i]);
+      for (let child of caseDate.children) {
+        child.classList.remove("reserve");
+        console.log(child);
+      }
+    }
+
+    if (
+      !inter &&
+      verifAnne(year) &&
+      verifMois(mois) &&
+      verifClient() &&
+      verifDoublon() &&
+      verifArriveAvantDepart()
+    ) {
+      enregistreLocataireMois(mois, year);
+    }
   });
 
   boutonQuitter.addEventListener("click", () => {
@@ -483,17 +600,24 @@ async function popupInfo(idLocataire) {
   });
 
   boutonSupp.addEventListener("click", () => {
-    //supprimer le locataire dans le fichier json
-    supprimeLocataire(idLocataire);
+    const demiANettoyer = document.querySelectorAll(".demi");
+    for (let i = 0; i < demiANettoyer.length; i++) {
+      demiANettoyer[i].classList.remove("reserve");
+    }
     const allInput = document.querySelectorAll(".dataLoc");
     for (let i = 0; i < allInput.length; i++) {
       allInput[i].value = "";
     }
+    //supprimer le locataire dans le fichier json
+    supprimeLocataire(idLocataire);
   });
 }
 
 async function supprimeLocataire(idLocataire) {
+  //
   //supprimer le locataire dans le fichier json
+
+  //ajouter supprimer les id reserve
   try {
     const response = await fetch(
       `http://localhost:3000/locataires/${idLocataire}`,

@@ -289,7 +289,7 @@ function recupyear() {
       casesANettoyer[k].innerText = "";
     }
 
-    console.log(casesANettoyer[5]);
+    //console.log(casesANettoyer[5]);
     // remplir le tableau firstDayMonth avec le nom de chaque premier jour de chaque mois
     for (let j = 0; j < month.length; j++) {
       firstDayMonth[j] = getFirstDayOfMonth(yearChoosed, j);
@@ -352,14 +352,14 @@ function miseAJourMois(premierJourDuMois, mois, sigleMois) {
 }
 
 //changer le fond des case au click pour visualiser la reservation
-let cases = document.querySelectorAll(
-  ".mars, .avril, .mai, .juin, .juillet, .aout, .septembre, .octobre, .novembre"
-);
-cases.forEach((caseElement) => {
-  caseElement.addEventListener("click", () => {
-    caseElement.classList.toggle("clicked");
-  });
-});
+// let cases = document.querySelectorAll(
+//   ".mars, .avril, .mai, .juin, .juillet, .aout, .septembre, .octobre, .novembre"
+// );
+// cases.forEach((caseElement) => {
+//   caseElement.addEventListener("click", () => {
+//     caseElement.classList.toggle("clicked");
+//   });
+// });
 //ajouter event lidteneu aux boutons de sauvegarde
 // for (let i = 0; i < boutonSave.length; i++) {
 //   boutonSave[i].addEventListener("click", () => {
