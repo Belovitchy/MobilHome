@@ -1,6 +1,6 @@
 //const { response } = require("../backend/app");
 import { creerCardLocataire } from "./locataires.js";
-import { popupAlert } from "./locataires.js";
+//import { popupAlert } from "./locataires.js";
 const month = [
   "Janvier",
   "Fevrier",

@@ -53,7 +53,6 @@ for (let i = 0; i < allBouton.length; i++) {
 creerCardLocataire();
 
 function popupCreer(mois) {
-  const inter = true;
   const zoneTitre = document.getElementById("titrePopup");
   const btnValider = document.getElementById("enr");
   btnValider.innerText = "Enregistrer";
@@ -61,31 +60,46 @@ function popupCreer(mois) {
   const year = document.getElementById("year").value;
   const popup = document.querySelector(".popup");
   popup.style.display = "block";
+  const boutonQuitter = document.getElementById("quit");
+  const boutonSupp = document.getElementById("supp");
+  const boutonSave = document.getElementById("enr");
+
   //vider les inputs
   const allInput = document.querySelectorAll(".dataLoc");
   for (let i = 0; i < allInput.length; i++) {
     allInput[i].value = "";
   }
-  const boutonQuitter = document.getElementById("quit");
-  const boutonSupp = document.getElementById("supp");
-  const boutonSave = document.getElementById("enr");
 
   boutonSave.addEventListener("click", () => {
+    const inter = true;
     // ajouter toutes les securite zone pas reserve, nom etc...
-    if (
-      inter &&
-      verifAnne(year) &&
-      verifMois(mois) &&
-      verifClient() &&
-      verifDoublon() &&
-      verifArriveAvantDepart()
-    ) {
-      enregistreLocataireMois(mois, year);
+    if (inter) {
+      if (
+        verifAnne(year) &&
+        verifMois(mois) &&
+        verifClient() &&
+        verifDoublon() &&
+        verifArriveAvantDepart()
+      ) {
+        enregistreLocataireMois(mois, year);
+        //creerCardLocataire();
+        const popup = document.querySelector(".popup");
+        popup.style.display = "none";
+        boutonSave.removeEventListener;
+        return;
+      } else {
+        //popupAlert("verifier les infos");
+        console.log("popupcreer");
+        boutonSave.removeEventListener;
+        return;
+      }
+    } else {
+      boutonSave.removeEventListener;
+      return;
     }
   });
 
   boutonQuitter.addEventListener("click", () => {
-    creerCardLocataire();
     const popup = document.querySelector(".popup");
     popup.style.display = "none";
   });
@@ -111,12 +125,13 @@ function verifArriveAvantDepart() {
   const zoneDepart = document.getElementById("depart");
   const dateArrive = new Date(zoneArrivee.value);
   const dateDepart = new Date(zoneDepart.value);
-  console.log(dateArrive);
-  console.log(dateDepart);
+
   if (dateArrive >= dateDepart) {
     popupAlert("le départ est avant l'arrivée");
+
     return false;
   } else {
+    console.log("l'arrive est avant depart");
     return true;
   }
 }
@@ -128,6 +143,7 @@ function verifAnne(year) {
     popupAlert("L'année d'arrivee ne correspond pas a l'annee choisie");
     return false;
   } else {
+    console.log("c'est la bonne annee");
     return true;
   }
 }
@@ -174,6 +190,7 @@ function verifMois(mois) {
     popupAlert("Le mois ne correspondent pas");
     return false;
   } else {
+    console.log("c'est le bon mois");
     return true;
   }
 }
@@ -195,6 +212,7 @@ function verifClient() {
     );
     return false;
   } else {
+    console.log("les champs obligatoires sont ok");
     return true;
   }
 }
@@ -224,6 +242,7 @@ function verifDoublon() {
       child.classList.contains("reserve")
     ) {
       popupAlert("La date d'arrivée est déjà réservée");
+
       return false;
     }
   }
@@ -241,14 +260,15 @@ function verifDoublon() {
   for (let i = 0; i < dateArray.length; i++) {
     const caseDate = document.getElementById(dateArray[i]);
     for (let child of caseDate.children) {
+      //console.log(child);
       if (child.classList.contains("reserve")) {
         popupAlert("La date choisie est déjà réservée");
-        console.log("ici");
+
         return false;
       }
     }
   }
-
+  console.log("pas de doublon");
   return true;
 }
 //-----------------------------------------------------------------------------
@@ -266,7 +286,7 @@ export function popupAlert(message) {
   });
 }
 
-function enregistreLocataireMois(mois, year) {
+async function enregistreLocataireMois(mois, year) {
   const dataClient = {
     annee: year,
     mois: mois,
@@ -311,14 +331,28 @@ function enregistreLocataireMois(mois, year) {
     dateNaissance8: document.getElementById("nais8").value,
   };
   const chargeUtile = JSON.stringify(dataClient);
-  fetch("http://localhost:3000/locataires", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: chargeUtile,
-  });
-  //console.log(dataClient);
+  try {
+    const response = await fetch("http://localhost:3000/locataires", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: chargeUtile,
+    });
+
+    // Attendre la conversion de la réponse en JSON
+    const result = await response.json();
+    creerCardLocataire();
+    // Log ou utilise le résultat selon tes besoins
+    console.log(result);
+
+    // Faire d'autres opérations après avoir reçu la réponse
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement du locataire :", error);
+  }
+
+  // Retourner ou exécuter d'autres opérations après avoir traité la réponse
+  return;
 }
 
 async function recupListClients() {
@@ -328,8 +362,8 @@ async function recupListClients() {
     //console.log("Success:", data); // Vérifie la structure des données ici
     return data; // Retourne les données JSON
   } catch (error) {
-    popupAlert("Erreur lors de la recuperation des clients : " + error);
-    //console.error("Error:", error);
+    //popupAlert("Erreur lors de la recuperation des clients : " + error);
+    console.error("Error:", error);
     return null; // Retourne null en cas d'erreur
   }
 }
@@ -368,8 +402,7 @@ export async function creerCardLocataire() {
     creerDivLocataire(clienstTries.anneeOctobre, "cardsOctobre");
     creerDivLocataire(clienstTries.anneeNovembre, "cardsNovembre");
 
-    //le pb est la
-    // Ajoute ici le code pour créer les cartes des locataires ou fonction
+    return;
   } else {
     creerDivLocataire([], "cardsMars");
     creerDivLocataire([], "cardsAvril");
@@ -381,6 +414,7 @@ export async function creerCardLocataire() {
     creerDivLocataire([], "cardsOctobre");
     creerDivLocataire([], "cardsNovembre");
     //popupAlert("Aucun client trouvé pour l'année " + year);
+    return;
   }
 }
 
@@ -420,8 +454,10 @@ function creerDivLocataire(mois, idDiv) {
       //console.log(locElement.id);
       remplissageCalendrier(LocMois.arrive, LocMois.depart, LocMois.couleur);
     }
+    return;
   } else {
     // console.log("pas de locataire");
+    return;
   }
 }
 
@@ -457,7 +493,6 @@ function trierAnneeParMois(listClientAnnee) {
 }
 
 async function popupInfo(idLocataire) {
-  const inter = false;
   const zoneTitre = document.getElementById("titrePopup");
 
   zoneTitre.innerText = "Info locataire";
@@ -472,6 +507,7 @@ async function popupInfo(idLocataire) {
   //remplir les inputs
   const clientsData = await recupListClients();
   const client = clientsData[idLocataire];
+
   const zoneArrive = document.getElementById("arrive");
   zoneArrive.value = client.arrive;
   const zoneDepart = document.getElementById("depart");
@@ -543,58 +579,74 @@ async function popupInfo(idLocataire) {
   const mois = client.mois;
   const year = client.annee;
   boutonSave.addEventListener("click", () => {
-    const dateArrive = new Date(client.arrive);
-    const dateDepart = new Date(client.depart);
-    const dateArray = [];
-    let date = new Date(dateArrive);
-    date.setDate(date.getDate() + 1); //partir au jour d'apres
-    while (date < dateDepart) {
-      dateArray.push(date.toISOString().split("T")[0]);
-      date.setDate(date.getDate() + 1);
-    }
-    const caseDateArrivee = document.getElementById(client.arrive);
-    const caseDateDepart = document.getElementById(client.depart);
-
-    //console.log(caseDateArrivee);
-    //recupérer la div enfant qui a aprem comme class
-    for (let child of caseDateArrivee.children) {
-      if (child.classList.contains("aprem")) {
-        child.classList.remove("reserve");
-        console.log(child);
+    const inter = false;
+    console.log(inter + "popInfo");
+    if (!inter) {
+      console.log(inter);
+      const dateArrive = new Date(client.arrive);
+      const dateDepart = new Date(client.depart);
+      const dateArray = [];
+      let date = new Date(dateArrive);
+      date.setDate(date.getDate() + 1); //partir au jour d'apres
+      while (date < dateDepart) {
+        dateArray.push(date.toISOString().split("T")[0]);
+        date.setDate(date.getDate() + 1);
       }
-    }
+      const caseDateArrivee = document.getElementById(client.arrive);
+      const caseDateDepart = document.getElementById(client.depart);
 
-    for (let child of caseDateDepart.children) {
-      if (child.classList.contains("matin")) {
-        //mettre le style de idLocataire.couleur
+      //console.log(caseDateArrivee);
+      //recupérer la div enfant qui a aprem comme class
 
-        child.classList.remove("reserve");
-        console.log(child);
+      for (let child of caseDateArrivee.children) {
+        if (child.classList.contains("aprem")) {
+          child.classList.remove("reserve");
+          //console.log(child);
+        }
       }
-    }
 
-    for (let i = 0; i < dateArray.length; i++) {
-      const caseDate = document.getElementById(dateArray[i]);
-      for (let child of caseDate.children) {
-        child.classList.remove("reserve");
-        console.log(child);
+      for (let child of caseDateDepart.children) {
+        if (child.classList.contains("matin")) {
+          //mettre le style de idLocataire.couleur
+
+          child.classList.remove("reserve");
+          console.log(child);
+        }
       }
-    }
 
-    if (
-      !inter &&
-      verifAnne(year) &&
-      verifMois(mois) &&
-      verifClient() &&
-      verifDoublon() &&
-      verifArriveAvantDepart()
-    ) {
-      enregistreLocataireMois(mois, year);
+      for (let i = 0; i < dateArray.length; i++) {
+        const caseDate = document.getElementById(dateArray[i]);
+        for (let child of caseDate.children) {
+          child.classList.remove("reserve");
+          //console.log(child);
+        }
+      }
+      if (
+        verifAnne(year) &&
+        verifMois(mois) &&
+        verifClient() &&
+        verifDoublon() &&
+        verifArriveAvantDepart()
+      ) {
+        enregistreLocataireMois(mois, year);
+
+        const popup = document.querySelector(".popup");
+        popup.style.display = "none";
+        boutonSave.removeEventListener;
+        return;
+      } else {
+        //popupAlert("verifier les infos");
+        console.log("popupinfo");
+        boutonSave.removeEventListener;
+        return;
+      }
+    } else {
+      boutonSave.removeEventListener;
+      return;
     }
   });
 
   boutonQuitter.addEventListener("click", () => {
-    creerCardLocataire();
     const popup = document.querySelector(".popup");
     popup.style.display = "none";
   });
