@@ -60,60 +60,75 @@ function popupCreer(mois) {
   const year = document.getElementById("year").value;
   const popup = document.querySelector(".popup");
   popup.style.display = "block";
-  const boutonQuitter = document.getElementById("quit");
-  const boutonSupp = document.getElementById("supp");
-  const boutonSave = document.getElementById("enr");
 
   //vider les inputs
   const allInput = document.querySelectorAll(".dataLoc");
   for (let i = 0; i < allInput.length; i++) {
     allInput[i].value = "";
   }
+  const inter = true;
+  if (inter) {
+    boutonSave.addEventListener(
+      "click",
+      () => {
+        // ajouter toutes les securite zone pas reserve, nom etc...
+        if (
+          verifAnne(year) &&
+          verifMois(mois) &&
+          verifClient() &&
+          verifDoublon() &&
+          verifArriveAvantDepart()
+        ) {
+          enregistreLocataireMois(mois, year);
+          //creerCardLocataire();
+          const popup = document.querySelector(".popup");
+          popup.style.display = "none";
 
-  boutonSave.addEventListener("click", () => {
-    const inter = true;
-    // ajouter toutes les securite zone pas reserve, nom etc...
-    if (inter) {
-      if (
-        verifAnne(year) &&
-        verifMois(mois) &&
-        verifClient() &&
-        verifDoublon() &&
-        verifArriveAvantDepart()
-      ) {
-        enregistreLocataireMois(mois, year);
-        //creerCardLocataire();
-        const popup = document.querySelector(".popup");
-        popup.style.display = "none";
-        boutonSave.removeEventListener;
-        return;
-      } else {
-        //popupAlert("verifier les infos");
-        console.log("popupcreer");
-        boutonSave.removeEventListener;
-        return;
+          return;
+        } else {
+          //popupAlert("verifier les infos");
+          console.log("popupcreer");
+
+          return;
+        }
+      },
+      {
+        once: true,
       }
-    } else {
-      boutonSave.removeEventListener;
-      return;
-    }
-  });
+    );
+  } else {
+    return;
+  }
 
-  boutonQuitter.addEventListener("click", () => {
-    const popup = document.querySelector(".popup");
-    popup.style.display = "none";
-  });
+  boutonQuitter.addEventListener(
+    "click",
+    () => {
+      const popup = document.querySelector(".popup");
+      popup.style.display = "none";
+    },
+    {
+      once: true,
+    }
+  );
 
-  boutonSupp.addEventListener("click", () => {
-    const demiANettoyer = document.querySelectorAll(".demi");
-    for (let i = 0; i < demiANettoyer.length; i++) {
-      demiANettoyer[i].classList.remove("reserve");
+  boutonSupp.addEventListener(
+    "click",
+    () => {
+      const demiANettoyer = document.querySelectorAll(".demi");
+      for (let i = 0; i < demiANettoyer.length; i++) {
+        demiANettoyer[i].classList.remove("reserve");
+      }
+      const allInput = document.querySelectorAll(".dataLoc");
+      for (let i = 0; i < allInput.length; i++) {
+        allInput[i].value = "";
+      }
+      const popup = document.querySelector(".popup");
+      popup.style.display = "none";
+    },
+    {
+      once: true,
     }
-    const allInput = document.querySelectorAll(".dataLoc");
-    for (let i = 0; i < allInput.length; i++) {
-      allInput[i].value = "";
-    }
-  });
+  );
 }
 //---------------------------------------------------------------------------------------
 //ici toutes les fonctions qui verifient toutes les conditions avant d'enregistrer
@@ -578,91 +593,105 @@ async function popupInfo(idLocataire) {
   boutonSave.innerText = "Modifier";
   const mois = client.mois;
   const year = client.annee;
-  boutonSave.addEventListener("click", () => {
-    const inter = false;
-    console.log(inter + "popInfo");
-    if (!inter) {
-      console.log(inter);
-      const dateArrive = new Date(client.arrive);
-      const dateDepart = new Date(client.depart);
-      const dateArray = [];
-      let date = new Date(dateArrive);
-      date.setDate(date.getDate() + 1); //partir au jour d'apres
-      while (date < dateDepart) {
-        dateArray.push(date.toISOString().split("T")[0]);
-        date.setDate(date.getDate() + 1);
-      }
-      const caseDateArrivee = document.getElementById(client.arrive);
-      const caseDateDepart = document.getElementById(client.depart);
+  const inter = false;
+  if (!inter) {
+    boutonSave.addEventListener(
+      "click",
+      () => {
+        console.log(inter + "popInfo");
 
-      //console.log(caseDateArrivee);
-      //recupérer la div enfant qui a aprem comme class
-
-      for (let child of caseDateArrivee.children) {
-        if (child.classList.contains("aprem")) {
-          child.classList.remove("reserve");
-          //console.log(child);
+        console.log(inter);
+        const dateArrive = new Date(client.arrive);
+        const dateDepart = new Date(client.depart);
+        const dateArray = [];
+        let date = new Date(dateArrive);
+        date.setDate(date.getDate() + 1); //partir au jour d'apres
+        while (date < dateDepart) {
+          dateArray.push(date.toISOString().split("T")[0]);
+          date.setDate(date.getDate() + 1);
         }
-      }
+        const caseDateArrivee = document.getElementById(client.arrive);
+        const caseDateDepart = document.getElementById(client.depart);
 
-      for (let child of caseDateDepart.children) {
-        if (child.classList.contains("matin")) {
-          //mettre le style de idLocataire.couleur
+        //console.log(caseDateArrivee);
+        //recupérer la div enfant qui a aprem comme class
 
-          child.classList.remove("reserve");
-          console.log(child);
+        for (let child of caseDateArrivee.children) {
+          if (child.classList.contains("aprem")) {
+            child.classList.remove("reserve");
+            //console.log(child);
+          }
         }
-      }
 
-      for (let i = 0; i < dateArray.length; i++) {
-        const caseDate = document.getElementById(dateArray[i]);
-        for (let child of caseDate.children) {
-          child.classList.remove("reserve");
-          //console.log(child);
+        for (let child of caseDateDepart.children) {
+          if (child.classList.contains("matin")) {
+            //mettre le style de idLocataire.couleur
+
+            child.classList.remove("reserve");
+            console.log(child);
+          }
         }
+
+        for (let i = 0; i < dateArray.length; i++) {
+          const caseDate = document.getElementById(dateArray[i]);
+          for (let child of caseDate.children) {
+            child.classList.remove("reserve");
+            //console.log(child);
+          }
+        }
+        if (
+          verifAnne(year) &&
+          verifMois(mois) &&
+          verifClient() &&
+          verifDoublon() &&
+          verifArriveAvantDepart()
+        ) {
+          enregistreLocataireMois(mois, year);
+
+          const popup = document.querySelector(".popup");
+          popup.style.display = "none";
+
+          return;
+        } else {
+          //popupAlert("verifier les infos");
+          console.log("popupinfo");
+
+          return;
+        }
+      },
+      { once: true }
+    );
+  } else {
+    return;
+  }
+
+  boutonQuitter.addEventListener(
+    "click",
+    () => {
+      const popup = document.querySelector(".popup");
+      popup.style.display = "none";
+    },
+    { once: true }
+  );
+
+  boutonSupp.addEventListener(
+    "click",
+    () => {
+      const demiANettoyer = document.querySelectorAll(".demi");
+      for (let i = 0; i < demiANettoyer.length; i++) {
+        demiANettoyer[i].classList.remove("reserve");
       }
-      if (
-        verifAnne(year) &&
-        verifMois(mois) &&
-        verifClient() &&
-        verifDoublon() &&
-        verifArriveAvantDepart()
-      ) {
-        enregistreLocataireMois(mois, year);
-
-        const popup = document.querySelector(".popup");
-        popup.style.display = "none";
-        boutonSave.removeEventListener;
-        return;
-      } else {
-        //popupAlert("verifier les infos");
-        console.log("popupinfo");
-        boutonSave.removeEventListener;
-        return;
+      const allInput = document.querySelectorAll(".dataLoc");
+      for (let i = 0; i < allInput.length; i++) {
+        allInput[i].value = "";
       }
-    } else {
-      boutonSave.removeEventListener;
-      return;
-    }
-  });
-
-  boutonQuitter.addEventListener("click", () => {
-    const popup = document.querySelector(".popup");
-    popup.style.display = "none";
-  });
-
-  boutonSupp.addEventListener("click", () => {
-    const demiANettoyer = document.querySelectorAll(".demi");
-    for (let i = 0; i < demiANettoyer.length; i++) {
-      demiANettoyer[i].classList.remove("reserve");
-    }
-    const allInput = document.querySelectorAll(".dataLoc");
-    for (let i = 0; i < allInput.length; i++) {
-      allInput[i].value = "";
-    }
-    //supprimer le locataire dans le fichier json
-    supprimeLocataire(idLocataire);
-  });
+      //supprimer le locataire dans le fichier json
+      supprimeLocataire(idLocataire);
+      const popup = document.querySelector(".popup");
+      popup.style.display = "none";
+    },
+    { once: true }
+  );
 }
 
 async function supprimeLocataire(idLocataire) {
