@@ -86,7 +86,9 @@ h2 {
 
 .save {
   background: rgba(169, 169, 169, 0.856);
-  width: 200px;
+  width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
   font-size: 1.5rem;
   border-radius: 20px;
 }
@@ -171,6 +173,7 @@ h4 {
 h4:hover {
   cursor: pointer;
   scale: 1.1;
+  transition: 0.3s;
 }
 span {
   font-size: 1rem;

@@ -8,6 +8,10 @@ const septembre = "septembre";
 const octobre = "octobre";
 const novembre = "novembre";
 
+const boutonQuitter = document.getElementById("quit");
+const boutonSupp = document.getElementById("supp");
+const boutonSave = document.getElementById("enr");
+
 const allBouton = document.querySelectorAll(".addClient");
 for (let i = 0; i < allBouton.length; i++) {
   allBouton[i].addEventListener("click", function (event) {
@@ -54,8 +58,8 @@ creerCardLocataire();
 
 function popupCreer(mois) {
   const zoneTitre = document.getElementById("titrePopup");
-  const btnValider = document.getElementById("enr");
-  btnValider.innerText = "Enregistrer";
+
+  boutonSave.innerText = "Enregistrer";
   zoneTitre.innerText = "Ajouter locataire";
   const year = document.getElementById("year").value;
   const popup = document.querySelector(".popup");
@@ -66,69 +70,60 @@ function popupCreer(mois) {
   for (let i = 0; i < allInput.length; i++) {
     allInput[i].value = "";
   }
-  const inter = true;
-  if (inter) {
-    boutonSave.addEventListener(
-      "click",
-      () => {
-        // ajouter toutes les securite zone pas reserve, nom etc...
-        if (
-          verifAnne(year) &&
-          verifMois(mois) &&
-          verifClient() &&
-          verifDoublon() &&
-          verifArriveAvantDepart()
-        ) {
-          enregistreLocataireMois(mois, year);
-          //creerCardLocataire();
-          const popup = document.querySelector(".popup");
-          popup.style.display = "none";
 
-          return;
-        } else {
-          //popupAlert("verifier les infos");
-          console.log("popupcreer");
-
-          return;
-        }
-      },
-      {
-        once: true,
-      }
-    );
-  } else {
-    return;
+  function onClickEnr() {
+    // ajouter toutes les securite zone pas reserve, nom etc...
+    if (
+      verifAnne(year) &&
+      verifMois(mois) &&
+      verifClient() &&
+      verifDoublon() &&
+      verifArriveAvantDepart()
+    ) {
+      enregistreLocataireMois(mois, year);
+      //creerCardLocataire();
+      const popup = document.querySelector(".popup");
+      popup.style.display = "none";
+      boutonQuitter.removeEventListener("click", onClickQuitter);
+      boutonSupp.removeEventListener("click", onClickSupp);
+      boutonSave.removeEventListener("click", onClickModif);
+      return;
+    } else {
+      //popupAlert("verifier les infos");
+      console.log("popupcreer");
+      // const popup = document.querySelector(".popup");
+      // popup.style.display = "none";
+      // boutonSave.removeEventListener("click", onClickEnr);
+      return;
+    }
   }
 
-  boutonQuitter.addEventListener(
-    "click",
-    () => {
-      const popup = document.querySelector(".popup");
-      popup.style.display = "none";
-    },
-    {
-      once: true,
-    }
-  );
+  function onClickQuitter() {
+    const popup = document.querySelector(".popup");
+    popup.style.display = "none";
+    boutonQuitter.removeEventListener("click", onClickQuitter);
+    boutonSupp.removeEventListener("click", onClickSupp);
+    boutonSave.removeEventListener("click", onClickModif);
+  }
 
-  boutonSupp.addEventListener(
-    "click",
-    () => {
-      const demiANettoyer = document.querySelectorAll(".demi");
-      for (let i = 0; i < demiANettoyer.length; i++) {
-        demiANettoyer[i].classList.remove("reserve");
-      }
-      const allInput = document.querySelectorAll(".dataLoc");
-      for (let i = 0; i < allInput.length; i++) {
-        allInput[i].value = "";
-      }
-      const popup = document.querySelector(".popup");
-      popup.style.display = "none";
-    },
-    {
-      once: true,
+  function onClickSupp() {
+    const demiANettoyer = document.querySelectorAll(".demi");
+    for (let i = 0; i < demiANettoyer.length; i++) {
+      demiANettoyer[i].classList.remove("reserve");
     }
-  );
+    const allInput = document.querySelectorAll(".dataLoc");
+    for (let i = 0; i < allInput.length; i++) {
+      allInput[i].value = "";
+    }
+    const popup = document.querySelector(".popup");
+    popup.style.display = "none";
+    boutonQuitter.removeEventListener("click", onClickQuitter);
+    boutonSupp.removeEventListener("click", onClickSupp);
+    boutonSave.removeEventListener("click", onClickModif);
+  }
+  boutonSave.addEventListener("click", onClickEnr);
+  boutonQuitter.addEventListener("click", onClickQuitter);
+  boutonSupp.addEventListener("click", onClickSupp);
 }
 //---------------------------------------------------------------------------------------
 //ici toutes les fonctions qui verifient toutes les conditions avant d'enregistrer
@@ -295,10 +290,11 @@ export function popupAlert(message) {
   const btnFermer = document.querySelector(".fermer");
   zoneMessage.innerText = message;
   alert.style.display = "block";
-
-  btnFermer.addEventListener("click", () => {
+  function onClickFermer() {
     alert.style.display = "none";
-  });
+    btnFermer.removeEventListener("click", onClickFermer);
+  }
+  btnFermer.addEventListener("click", onClickFermer);
 }
 
 async function enregistreLocataireMois(mois, year) {
@@ -458,11 +454,17 @@ function creerDivLocataire(mois, idDiv) {
         const idLoc = event.currentTarget.id;
         //console.log(idLoc + "id locataire");
         //afficher la popup avec infos locataire
+        console.log(idLoc);
         popupInfo(idLoc);
       });
       const nomLoc = document.createElement("h4");
-      nomLoc.innerText =
-        LocMois.nom1 + " du " + LocMois.arrive + " au " + LocMois.depart;
+      nomLoc.innerHTML =
+        locElement.id +
+        "<br>" +
+        " du " +
+        LocMois.arrive +
+        " au " +
+        LocMois.depart;
       nomLoc.style.backgroundColor = mois[i].couleur;
       locElement.appendChild(nomLoc);
       parentMois.appendChild(locElement);
@@ -509,7 +511,7 @@ function trierAnneeParMois(listClientAnnee) {
 
 async function popupInfo(idLocataire) {
   const zoneTitre = document.getElementById("titrePopup");
-
+  boutonSave.innerText = "Modifier";
   zoneTitre.innerText = "Info locataire";
   const popup = document.querySelector(".popup");
   popup.style.display = "block";
@@ -522,6 +524,7 @@ async function popupInfo(idLocataire) {
   //remplir les inputs
   const clientsData = await recupListClients();
   const client = clientsData[idLocataire];
+  console.log(idLocataire);
 
   const zoneArrive = document.getElementById("arrive");
   zoneArrive.value = client.arrive;
@@ -587,111 +590,102 @@ async function popupInfo(idLocataire) {
   const zoneAge8 = document.getElementById("age8");
   zoneAge8.value = client.age8;
 
-  const boutonQuitter = document.getElementById("quit");
-  const boutonSupp = document.getElementById("supp");
-  const boutonSave = document.getElementById("enr");
-  boutonSave.innerText = "Modifier";
   const mois = client.mois;
   const year = client.annee;
   const inter = false;
-  if (!inter) {
-    boutonSave.addEventListener(
-      "click",
-      () => {
-        console.log(inter + "popInfo");
 
-        console.log(inter);
-        const dateArrive = new Date(client.arrive);
-        const dateDepart = new Date(client.depart);
-        const dateArray = [];
-        let date = new Date(dateArrive);
-        date.setDate(date.getDate() + 1); //partir au jour d'apres
-        while (date < dateDepart) {
-          dateArray.push(date.toISOString().split("T")[0]);
-          date.setDate(date.getDate() + 1);
-        }
-        const caseDateArrivee = document.getElementById(client.arrive);
-        const caseDateDepart = document.getElementById(client.depart);
+  function onClickModif() {
+    const dateArrive = new Date(client.arrive);
+    const dateDepart = new Date(client.depart);
+    const dateArray = [];
+    let date = new Date(dateArrive);
+    date.setDate(date.getDate() + 1); //partir au jour d'apres
+    while (date < dateDepart) {
+      dateArray.push(date.toISOString().split("T")[0]);
+      date.setDate(date.getDate() + 1);
+    }
+    const caseDateArrivee = document.getElementById(client.arrive);
+    const caseDateDepart = document.getElementById(client.depart);
 
-        //console.log(caseDateArrivee);
-        //recupérer la div enfant qui a aprem comme class
+    //console.log(caseDateArrivee);
+    //recupérer la div enfant qui a aprem comme class
 
-        for (let child of caseDateArrivee.children) {
-          if (child.classList.contains("aprem")) {
-            child.classList.remove("reserve");
-            //console.log(child);
-          }
-        }
+    for (let child of caseDateArrivee.children) {
+      if (child.classList.contains("aprem")) {
+        child.classList.remove("reserve");
+        //console.log(child);
+      }
+    }
 
-        for (let child of caseDateDepart.children) {
-          if (child.classList.contains("matin")) {
-            //mettre le style de idLocataire.couleur
+    for (let child of caseDateDepart.children) {
+      if (child.classList.contains("matin")) {
+        //mettre le style de idLocataire.couleur
 
-            child.classList.remove("reserve");
-            console.log(child);
-          }
-        }
+        child.classList.remove("reserve");
+        //console.log(child);
+      }
+    }
 
-        for (let i = 0; i < dateArray.length; i++) {
-          const caseDate = document.getElementById(dateArray[i]);
-          for (let child of caseDate.children) {
-            child.classList.remove("reserve");
-            //console.log(child);
-          }
-        }
-        if (
-          verifAnne(year) &&
-          verifMois(mois) &&
-          verifClient() &&
-          verifDoublon() &&
-          verifArriveAvantDepart()
-        ) {
-          enregistreLocataireMois(mois, year);
+    for (let i = 0; i < dateArray.length; i++) {
+      const caseDate = document.getElementById(dateArray[i]);
+      for (let child of caseDate.children) {
+        child.classList.remove("reserve");
+        //console.log(child);
+      }
+    }
+    if (
+      verifAnne(year) &&
+      verifMois(mois) &&
+      verifClient() &&
+      verifDoublon() &&
+      verifArriveAvantDepart()
+    ) {
+      enregistreLocataireMois(mois, year);
 
-          const popup = document.querySelector(".popup");
-          popup.style.display = "none";
-
-          return;
-        } else {
-          //popupAlert("verifier les infos");
-          console.log("popupinfo");
-
-          return;
-        }
-      },
-      { once: true }
-    );
-  } else {
-    return;
+      const popup = document.querySelector(".popup");
+      popup.style.display = "none";
+      boutonQuitter.removeEventListener("click", onClickQuitter);
+      boutonSupp.removeEventListener("click", onClickSupp);
+      boutonSave.removeEventListener("click", onClickModif);
+      return;
+    } else {
+      //popupAlert("verifier les infos");
+      //console.log("popupinfo");
+      // const popup = document.querySelector(".popup");
+      // popup.style.display = "none";
+      // boutonSave.removeEventListener("click", onClickModif);
+      return;
+    }
   }
 
-  boutonQuitter.addEventListener(
-    "click",
-    () => {
-      const popup = document.querySelector(".popup");
-      popup.style.display = "none";
-    },
-    { once: true }
-  );
+  function onClickQuitter() {
+    const popup = document.querySelector(".popup");
+    popup.style.display = "none";
+    boutonQuitter.removeEventListener("click", onClickQuitter);
+    boutonSupp.removeEventListener("click", onClickSupp);
+    boutonSave.removeEventListener("click", onClickModif);
+  }
 
-  boutonSupp.addEventListener(
-    "click",
-    () => {
-      const demiANettoyer = document.querySelectorAll(".demi");
-      for (let i = 0; i < demiANettoyer.length; i++) {
-        demiANettoyer[i].classList.remove("reserve");
-      }
-      const allInput = document.querySelectorAll(".dataLoc");
-      for (let i = 0; i < allInput.length; i++) {
-        allInput[i].value = "";
-      }
-      //supprimer le locataire dans le fichier json
-      supprimeLocataire(idLocataire);
-      const popup = document.querySelector(".popup");
-      popup.style.display = "none";
-    },
-    { once: true }
-  );
+  function onClickSupp() {
+    const demiANettoyer = document.querySelectorAll(".demi");
+    for (let i = 0; i < demiANettoyer.length; i++) {
+      demiANettoyer[i].classList.remove("reserve");
+    }
+    const allInput = document.querySelectorAll(".dataLoc");
+    for (let i = 0; i < allInput.length; i++) {
+      allInput[i].value = "";
+    }
+    //supprimer le locataire dans le fichier json
+    supprimeLocataire(idLocataire);
+    const popup = document.querySelector(".popup");
+    popup.style.display = "none";
+    boutonQuitter.removeEventListener("click", onClickQuitter);
+    boutonSupp.removeEventListener("click", onClickSupp);
+    boutonSave.removeEventListener("click", onClickModif);
+  }
+  boutonSave.addEventListener("click", onClickModif);
+  boutonQuitter.addEventListener("click", onClickQuitter);
+  boutonSupp.addEventListener("click", onClickSupp);
 }
 
 async function supprimeLocataire(idLocataire) {
@@ -706,7 +700,7 @@ async function supprimeLocataire(idLocataire) {
         method: "DELETE",
       }
     );
-
+    console.log("id a  supprimé:", idLocataire);
     if (response.ok) {
       popupAlert(idLocataire + " a été supprimé");
       //console.log("Client supprimé:", idLocataire);
