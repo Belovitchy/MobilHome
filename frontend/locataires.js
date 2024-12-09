@@ -86,7 +86,7 @@ function popupCreer(mois) {
       popup.style.display = "none";
       boutonQuitter.removeEventListener("click", onClickQuitter);
       boutonSupp.removeEventListener("click", onClickSupp);
-      boutonSave.removeEventListener("click", onClickModif);
+      boutonSave.removeEventListener("click", onClickEnr);
       return;
     } else {
       //popupAlert("verifier les infos");
@@ -103,7 +103,7 @@ function popupCreer(mois) {
     popup.style.display = "none";
     boutonQuitter.removeEventListener("click", onClickQuitter);
     boutonSupp.removeEventListener("click", onClickSupp);
-    boutonSave.removeEventListener("click", onClickModif);
+    boutonSave.removeEventListener("click", onClickEnr);
   }
 
   function onClickSupp() {
@@ -119,7 +119,7 @@ function popupCreer(mois) {
     popup.style.display = "none";
     boutonQuitter.removeEventListener("click", onClickQuitter);
     boutonSupp.removeEventListener("click", onClickSupp);
-    boutonSave.removeEventListener("click", onClickModif);
+    boutonSave.removeEventListener("click", onClickEnr);
   }
   boutonSave.addEventListener("click", onClickEnr);
   boutonQuitter.addEventListener("click", onClickQuitter);
