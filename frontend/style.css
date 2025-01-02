@@ -243,6 +243,21 @@ label {
   height: 30px;
   margin: 5px;
 }
+#bebe,
+#enfant,
+#adulte,
+#total,
+#age1,
+#age2,
+#age3,
+#age4,
+#age5,
+#age6,
+#age7,
+#age8 {
+  font-size: 1.2rem;
+  text-align: center;
+}
 
 input {
   background: rgba(238, 235, 235, 0.493);
@@ -256,7 +271,7 @@ input {
   flex-direction: column;
 }
 .telmail {
-  margin-top: 20px;
+  margin-top: 10px;
 
   display: flex;
   gap: 10px;
@@ -271,9 +286,16 @@ input {
 #siblu {
   width: 160px;
 }
+#commentaire {
+  resize: none;
+  background: rgba(238, 235, 235, 0.493);
+  height: 50px;
+  width: 500px;
+  border-radius: 5px;
+}
 
 .buttonsPop {
-  margin-top: 40px;
+  margin-top: 15px;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -351,11 +373,9 @@ input {
   height: auto;
   text-align: center;
   padding: 10px;
-
   border-radius: 20px;
   border: solid 3px black;
   box-shadow: black 0px 0px 14px 7px;
-
   background-color: rgba(169, 169, 169, 1);
 }
 

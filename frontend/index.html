@@ -121,13 +121,33 @@
         <div class="nbrPersonnes">
           <span>personnes</span><br />
           <span>0-3ans</span><br />
-          <input type="number" name="personnes" id="" class="dataLoc" /><br />
+          <input
+            type="number"
+            name="personnes"
+            id="bebe"
+            class="dataLoc"
+          /><br />
           <span>4-17ans</span><br />
-          <input type="number" name="personnes" id="" class="dataLoc" /><br />
+          <input
+            type="number"
+            name="personnes"
+            id="enfant"
+            class="dataLoc"
+          /><br />
           <span>adultes</span><br />
-          <input type="number" name="personnes" id="" class="dataLoc" /><br />
+          <input
+            type="number"
+            name="personnes"
+            id="adulte"
+            class="dataLoc"
+          /><br />
           <span>total</span><br />
-          <input type="number" name="personnes" id="" class="dataLoc" /><br />
+          <input
+            type="number"
+            name="personnes"
+            id="total"
+            class="dataLoc"
+          /><br />
         </div>
       </section>
       <section class="contact">
@@ -140,6 +160,8 @@
           ><input type="text" name="immat" id="immat" class="dataLoc" />
           <label for="siblu">Ref. Siblu</label
           ><input type="text" name="siblu" id="siblu" class="dataLoc" />
+          <label for="commentaire">Commmentaire</label
+          ><textarea name="commentaire" id="commentaire"></textarea>
         </div>
         <div class="buttonsPop">
           <button id="enr">Enregistrer</button>
@@ -151,12 +173,23 @@
     </div>
     <section class="popupMessage">
       <h3>Messagerie</h3>
+      <textarea name="messageBardin" id="zoneMessage">
+Bonjour, voici la liste des vacanciers pour le mois de <span>mars</span></textarea
+      >
+      <div class="boutons">
+        <button>Envoyer</button>
+        <button id="fermer">Fermer</button>
+      </div>
     </section>
     <h1>Mobil Home Dunes De Contis</h1>
 
     <div class="calendar">
       <div>
-        <h2>MARS<button class="save">Message Locataires du mois</button></h2>
+        <h2>
+          MARS<button id="marsXLS" class="save">
+            Message Locataires du mois
+          </button>
+        </h2>
         <div class="container">
           <div class="grid">
             <div>N°sem</div>

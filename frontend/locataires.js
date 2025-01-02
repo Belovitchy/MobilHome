@@ -55,7 +55,9 @@ for (let i = 0; i < allBouton.length; i++) {
 
 //prevoir de l'appeler au chargement d'annee
 creerCardLocataire();
-
+//----------------------------------------------------------
+//creer un carte locataire
+//----------------------------------------------------------
 function popupCreer(mois) {
   const zoneTitre = document.getElementById("titrePopup");
 
@@ -282,6 +284,7 @@ function verifDoublon() {
   return true;
 }
 //-----------------------------------------------------------------------------
+//gestion des messages en fonction des erreurs
 //-----------------------------------------------------------------------------
 
 export function popupAlert(message) {
@@ -297,6 +300,10 @@ export function popupAlert(message) {
   btnFermer.addEventListener("click", onClickFermer);
 }
 
+//-----------------------------------------------------------
+//enregistrement d'un objet json dans le repertoire locataire.json au niveau du serveur
+//------------------------------------------------------------------------
+
 async function enregistreLocataireMois(mois, year) {
   const dataClient = {
     annee: year,
@@ -307,6 +314,7 @@ async function enregistreLocataireMois(mois, year) {
     telephone: document.getElementById("tel").value,
     email: document.getElementById("email").value,
     immatriculation: document.getElementById("immat").value,
+    commentaire: document.getElementById("commentaire").value,
     siblu: document.getElementById("siblu").value,
     nom1: document.getElementById("nom1").value,
     nom2: document.getElementById("nom2").value,
@@ -366,6 +374,10 @@ async function enregistreLocataireMois(mois, year) {
   return;
 }
 
+//-----------------------------------------------------
+//importer le fichier locataires .json
+//---------------------------------------------------
+
 async function recupListClients() {
   try {
     const response = await fetch("http://localhost:3000/locataires");
@@ -378,6 +390,9 @@ async function recupListClients() {
     return null; // Retourne null en cas d'erreur
   }
 }
+//-----------------------------------------------------------
+//creer une carte par locataire present ds le json
+//---------------------------------------------------------
 
 export async function creerCardLocataire() {
   const clientsData = await recupListClients();
@@ -509,7 +524,12 @@ function trierAnneeParMois(listClientAnnee) {
   };
 }
 
+//------------------------------------------------------------
+//fonction lorsque l'on click sur une carte locataire
+//------------------------------------------------------------
 async function popupInfo(idLocataire) {
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString(); // Format local
   const zoneTitre = document.getElementById("titrePopup");
   boutonSave.innerText = "Modifier";
   zoneTitre.innerText = "Info locataire";
@@ -525,6 +545,10 @@ async function popupInfo(idLocataire) {
   const clientsData = await recupListClients();
   const client = clientsData[idLocataire];
   console.log(idLocataire);
+
+  const mois = client.mois;
+  const year = client.annee;
+  const nbrYear = +year;
 
   const zoneArrive = document.getElementById("arrive");
   zoneArrive.value = client.arrive;
@@ -572,9 +596,11 @@ async function popupInfo(idLocataire) {
   zoneImmat.value = client.immatriculation;
   const zoneSiblu = document.getElementById("siblu");
   zoneSiblu.value = client.siblu;
-
+  const zoneCommentaire = document.getElementById("commentaire");
+  zoneCommentaire.value = client.commentaire;
   const zoneAge1 = document.getElementById("age1");
   zoneAge1.value = client.age1;
+
   const zoneAge2 = document.getElementById("age2");
   zoneAge2.value = client.age2;
   const zoneAge3 = document.getElementById("age3");
@@ -590,9 +616,152 @@ async function popupInfo(idLocataire) {
   const zoneAge8 = document.getElementById("age8");
   zoneAge8.value = client.age8;
 
-  const mois = client.mois;
-  const year = client.annee;
-  const inter = false;
+  const zoneNais1 = document.getElementById("nais1");
+  zoneNais1.value = client.dateNaissance1;
+
+  const zoneNais2 = document.getElementById("nais2");
+  zoneNais2.value = client.dateNaissance2;
+  const zoneNais3 = document.getElementById("nais3");
+  zoneNais3.value = client.dateNaissance3;
+  const zoneNais4 = document.getElementById("nais4");
+  zoneNais4.value = client.dateNaissance4;
+  const zoneNais5 = document.getElementById("nais5");
+  zoneNais5.value = client.dateNaissance5;
+  const zoneNais6 = document.getElementById("nais6");
+  zoneNais6.value = client.dateNaissance6;
+  const zoneNais7 = document.getElementById("nais7");
+  zoneNais7.value = client.dateNaissance7;
+  const zoneNais8 = document.getElementById("nais8");
+  zoneNais8.value = client.dateNaissance8;
+
+  if (zoneNais1.value == "" && zoneAge1.value != "") {
+    const nbrAge1 = parseInt(zoneAge1.value, 10);
+    const anneNais1 = nbrYear - nbrAge1;
+    const nbrAnneNais1 = +anneNais1;
+    zoneNais1.value = nbrAnneNais1 + "-01-01";
+  } else {
+    if (zoneNais1.value != "" && zoneAge1.value == "") {
+      const anneNais1 = new Date(zoneNais1.value).getFullYear();
+      zoneAge1.value = nbrYear - anneNais1;
+    }
+  }
+  if (zoneNais2.value == "" && zoneAge2.value != "") {
+    const nbrAge2 = parseInt(zoneAge2.value, 10);
+    const anneNais2 = nbrYear - nbrAge2;
+    const nbrAnneNais2 = +anneNais2;
+    zoneNais2.value = nbrAnneNais2 + "-01-01";
+  } else {
+    if (zoneNais2.value != "" && zoneAge2.value == "") {
+      const anneNais2 = new Date(zoneNais2.value).getFullYear();
+      zoneAge2.value = nbrYear - anneNais2;
+    }
+  }
+  if (zoneNais3.value == "" && zoneAge3.value != "") {
+    const nbrAge3 = parseInt(zoneAge3.value, 10);
+    const anneNais3 = nbrYear - nbrAge3;
+    const nbrAnneNais3 = +anneNais3;
+    zoneNais3.value = nbrAnneNais3 + "-01-01";
+  } else {
+    if (zoneNais3.value != "" && zoneAge3.value == "") {
+      const anneNais3 = new Date(zoneNais3.value).getFullYear();
+      zoneAge3.value = nbrYear - anneNais3;
+    }
+  }
+  if (zoneNais4.value == "" && zoneAge4.value != "") {
+    const nbrAge4 = parseInt(zoneAge4.value, 10);
+    const anneNais4 = nbrYear - nbrAge4;
+    const nbrAnneNais4 = +anneNais4;
+    zoneNais4.value = nbrAnneNais4 + "-01-01";
+  } else {
+    if (zoneNais4.value != "" && zoneAge4.value == "") {
+      const anneNais4 = new Date(zoneNais4.value).getFullYear();
+      zoneAge4.value = nbrYear - anneNais4;
+    }
+  }
+  if (zoneNais5.value == "" && zoneAge5.value != "") {
+    const nbrAge5 = parseInt(zoneAge5.value, 10);
+    const anneNais5 = nbrYear - nbrAge5;
+    const nbrAnneNais5 = +anneNais5;
+    zoneNais5.value = nbrAnneNais5 + "-01-01";
+  } else {
+    if (zoneNais5.value != "" && zoneAge5.value == "") {
+      const anneNais5 = new Date(zoneNais5.value).getFullYear();
+      zoneAge5.value = nbrYear - anneNais5;
+    }
+  }
+  if (zoneNais6.value == "" && zoneAge6.value != "") {
+    const nbrAge6 = parseInt(zoneAge6.value, 10);
+    const anneNais6 = nbrYear - nbrAge6;
+    const nbrAnneNais6 = +anneNais6;
+    zoneNais6.value = nbrAnneNais6 + "-01-01";
+  } else {
+    if (zoneNais6.value != "" && zoneAge6.value == "") {
+      const anneNais6 = new Date(zoneNais6.value).getFullYear();
+      zoneAge6.value = nbrYear - anneNais6;
+    }
+  }
+  if (zoneNais7.value == "" && zoneAge7.value != "") {
+    const nbrAge7 = parseInt(zoneAge7.value, 10);
+    const anneNais7 = nbrYear - nbrAge7;
+    const nbrAnneNais7 = +anneNais7;
+    zoneNais7.value = nbrAnneNais7 + "-01-01";
+  } else {
+    if (zoneNais7.value != "" && zoneAge7.value == "") {
+      const anneNais7 = new Date(zoneNais7.value).getFullYear();
+      zoneAge7.value = nbrYear - anneNais7;
+    }
+  }
+  if (zoneNais8.value == "" && zoneAge8.value != "") {
+    const nbrAge8 = parseInt(zoneAge8.value, 10);
+    const anneNais8 = nbrYear - nbrAge8;
+    const nbrAnneNais8 = +anneNais8;
+    zoneNais8.value = nbrAnneNais8 + "-01-01";
+  } else {
+    if (zoneNais8.value != "" && zoneAge8.value == "") {
+      const anneNais8 = new Date(zoneNais8.value).getFullYear();
+      zoneAge8.value = nbrYear - anneNais8;
+    }
+  }
+  const parentNom = document.querySelector(".nom");
+  const touteZoneNom = parentNom.querySelectorAll("input");
+
+  let decompteNbrPers = 0;
+  for (let input of touteZoneNom) {
+    if (input.value != "") {
+      decompteNbrPers++;
+    }
+  }
+  const zoneNbrPers = document.getElementById("total");
+  zoneNbrPers.value = decompteNbrPers;
+
+  const parentAge = document.querySelector(".age");
+  const touteZoneAge = parentAge.querySelectorAll("input");
+  let decompteNbrBebe = 0;
+  for (let input of touteZoneAge) {
+    if (input != "" && input.value < 4) {
+      decompteNbrBebe++;
+    }
+  }
+
+  let decompteEnfant = 0;
+  for (let input of touteZoneAge) {
+    if (input.value != "" && input.value > 3 && input.value < 18) {
+      console.log(decompteEnfant);
+      decompteEnfant++;
+    }
+  }
+  let decompteAdultes = 0;
+  for (let input of touteZoneAge) {
+    if (input.value > 17) {
+      decompteAdultes++;
+    }
+  }
+  const zoneNbrBebe = document.getElementById("bebe");
+  zoneNbrBebe.value = decompteNbrBebe;
+  const zoneNbrEnfant = document.getElementById("enfant");
+  zoneNbrEnfant.value = decompteEnfant;
+  const zoneNbrAdulte = document.getElementById("adulte");
+  zoneNbrAdulte.value = decompteAdultes;
 
   function onClickModif() {
     const dateArrive = new Date(client.arrive);
@@ -688,6 +857,10 @@ async function popupInfo(idLocataire) {
   boutonSupp.addEventListener("click", onClickSupp);
 }
 
+//--------------------------------------------------------
+//suppression de l'objet locataire ds le json
+//----------------------------------------------------
+
 async function supprimeLocataire(idLocataire) {
   //
   //supprimer le locataire dans le fichier json
@@ -715,8 +888,9 @@ async function supprimeLocataire(idLocataire) {
     //console.error("Erreur lors de la suppression du client:", error);
   }
 }
-
+//--------------------------------------------------------------------
 //mettre a jour calendrier en fonction des clients du mois
+//-------------------------------------------------------------------
 function remplissageCalendrier(arrive, depart, couleur) {
   const dateArrive = new Date(arrive);
   const dateDepart = new Date(depart);
