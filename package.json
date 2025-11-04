@@ -1,0 +1,25 @@
+{
+  "name": "mobilhome",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm start --prefix frontend\" \"npm run dev --prefix backend\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Belovitchy/MobilHome.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Belovitchy/MobilHome/issues"
+  },
+  "homepage": "https://github.com/Belovitchy/MobilHome#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

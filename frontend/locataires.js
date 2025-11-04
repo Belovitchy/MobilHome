@@ -1,3 +1,5 @@
+const API_BASE_URL = "http://localhost:3000";
+
 const mars = "mars";
 const avril = "avril";
 const mai = "mai";
@@ -351,7 +353,7 @@ async function enregistreLocataireMois(mois, year) {
   };
   const chargeUtile = JSON.stringify(dataClient);
   try {
-    const response = await fetch("http://localhost:3000/locataires", {
+    const response = await fetch(`${API_BASE_URL}/locataires`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -380,7 +382,7 @@ async function enregistreLocataireMois(mois, year) {
 
 async function recupListClients() {
   try {
-    const response = await fetch("http://localhost:3000/locataires");
+    const response = await fetch(`${API_BASE_URL}/locataires`);
     const data = await response.json();
     //console.log("Success:", data); // Vérifie la structure des données ici
     return data; // Retourne les données JSON
@@ -738,7 +740,7 @@ async function popupInfo(idLocataire) {
   const touteZoneAge = parentAge.querySelectorAll("input");
   let decompteNbrBebe = 0;
   for (let input of touteZoneAge) {
-    if (input != "" && input.value < 4) {
+    if (input.value != "" && input.value < 4) {
       decompteNbrBebe++;
     }
   }
@@ -867,12 +869,9 @@ async function supprimeLocataire(idLocataire) {
 
   //ajouter supprimer les id reserve
   try {
-    const response = await fetch(
-      `http://localhost:3000/locataires/${idLocataire}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/locataires/${idLocataire}`, {
+      method: "DELETE",
+    });
     console.log("id a  supprimé:", idLocataire);
     if (response.ok) {
       popupAlert(idLocataire + " a été supprimé");
