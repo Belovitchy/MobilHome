@@ -9,7 +9,7 @@
   "license": "ISC",
   "dependencies": {
     "http-server": "^13.0.1",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.14"
   },
   "description": ""
 }
