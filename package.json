@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/Belovitchy/MobilHome#readme",
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "concurrently": "^10.0.3"
   }
 }
